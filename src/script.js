@@ -104,10 +104,16 @@ if (reviewsContainer) {
    6) GALERIE (IMAGES + VIDÉOS + AUTOPLAY)
    ========================================================= */
 
+// ===== IMPORTS VITE =====
+import img1 from "./images/a.jpg";
+import vid1 from "./videos/1.mp4";
+import vid2 from "./videos/2.mp4";
+
+// ===== GALERIE =====
 const galleryMedia = [
-  { type: "image", src: "./src/images/a.jpg" },
-  { type: "video", src: "./src/videos/1.mp4" },
-  { type: "video", src: "./src/videos/2.mp4" }
+  { type: "image", src: img1 },
+  { type: "video", src: vid1 },
+  { type: "video", src: vid2 }
 ];
 
 const galleryMain = document.getElementById("gallery-main");
@@ -117,48 +123,48 @@ let galleryTimer;
 
 function initGallery() {
   galleryMedia.forEach((m, i) => {
-    const thumb = document.createElement(m.type === "image" ? "img" : "video");
-    thumb.src = m.src;
-    thumb.classList.add("thumb");
-    thumb.muted = true;
-    thumb.dataset.index = i;
+    const el = document.createElement(m.type === "image" ? "img" : "video");
+    el.src = m.src;
+    el.classList.add("thumb");
+    el.dataset.index = i;
+    if (m.type === "video") el.muted = true;
 
-    thumb.addEventListener("click", () => {
+    el.addEventListener("click", () => {
       clearInterval(galleryTimer);
       showMedia(i);
-      startGalleryAuto();
+      startAuto();
     });
 
-    galleryThumbs.appendChild(thumb);
+    galleryThumbs.appendChild(el);
   });
 
   showMedia(0);
-  startGalleryAuto();
+  startAuto();
 }
 
-function showMedia(index) {
-  galleryIndex = index;
+function showMedia(i) {
+  galleryIndex = i;
   galleryMain.innerHTML = "";
 
-  const media = galleryMedia[index];
-  const element = document.createElement(media.type === "image" ? "img" : "video");
-  element.src = media.src;
-  element.classList.add("gallery-full");
+  const m = galleryMedia[i];
+  const el = document.createElement(m.type === "image" ? "img" : "video");
+  el.src = m.src;
+  el.classList.add("gallery-full");
 
-  if (media.type === "video") {
-    element.autoplay = true;
-    element.muted = true;
-    element.loop = true;
-    element.playsInline = true;
+  if (m.type === "video") {
+    el.autoplay = true;
+    el.loop = true;
+    el.muted = true;
+    el.playsInline = true;
   }
 
-  galleryMain.appendChild(element);
+  galleryMain.appendChild(el);
 
   document.querySelectorAll(".thumb").forEach(t => t.classList.remove("active"));
-  galleryThumbs.children[index].classList.add("active");
+  galleryThumbs.children[i].classList.add("active");
 }
 
-function startGalleryAuto() {
+function startAuto() {
   galleryTimer = setInterval(() => {
     galleryIndex = (galleryIndex + 1) % galleryMedia.length;
     showMedia(galleryIndex);
@@ -166,6 +172,7 @@ function startGalleryAuto() {
 }
 
 if (galleryMain && galleryThumbs) initGallery();
+
 
 
 /* =========================================================

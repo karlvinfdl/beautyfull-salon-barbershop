@@ -30,3 +30,8 @@ desktop.ini
 
 # GitHub Pages deploy cache (gh-pages)
 .cache/
+
+# Firebase local configs & logs
+.firebase/
+firebase-debug.log
+firestore-debug.log

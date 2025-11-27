@@ -31,6 +31,8 @@
 
       <button id="logoutBtn" class="btn-primary" style="margin-bottom:1.6rem;">Déconnexion</button>
 
+      <!-- TABLEAU LOCALSTORAGE (EXISTANT) -->
+      <h2 class="section-subtitle" style="margin-bottom:0.8rem;">Rendez-vous (stockés sur cet appareil)</h2>
       <table class="admin-table">
         <thead>
           <tr>
@@ -47,9 +49,29 @@
         </tbody>
       </table>
 
-      <button id="clearAll" class="btn-submit" style="background:#B02124;color:white;">
-        Supprimer tous les rendez-vous
+      <button id="clearAll" class="btn-submit" style="background:#B02124;color:white; margin-top:1rem;">
+        Supprimer tous les rendez-vous (local)
       </button>
+
+      <!-- TABLEAU FIRESTORE (CLOUD) -->
+      <h2 class="section-subtitle" style="margin-top:2.5rem; margin-bottom:0.8rem;">
+        Rendez-vous en ligne (cloud)
+      </h2>
+      <table class="admin-table">
+        <thead>
+          <tr>
+            <th>Nom</th>
+            <th>Téléphone</th>
+            <th>Service</th>
+            <th>Date</th>
+            <th>Heure</th>
+            <th>Supprimer</th>
+          </tr>
+        </thead>
+        <tbody id="rdvCloudTableBody">
+          <!-- JS injecte ici les données Firestore -->
+        </tbody>
+      </table>
 
     </div>
 

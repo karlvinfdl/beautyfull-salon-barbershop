@@ -20,7 +20,10 @@
   ],
   "homepage": "https://karlvinfdl.github.io/beautyfull-salon-barbershop/",
   "devDependencies": {
-    "vite": "^5.0.0",
-    "gh-pages": "^6.0.0"
+    "gh-pages": "^6.0.0",
+    "vite": "^5.0.0"
+  },
+  "dependencies": {
+    "firebase": "^12.6.0"
   }
 }

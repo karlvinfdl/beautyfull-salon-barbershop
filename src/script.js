@@ -6,6 +6,13 @@
    1) SERVICES
    ========================================================= */
 
+import {
+  saveReservationToCloud,
+  getReservationsFromCloud,
+  deleteReservationFromCloud,
+  isSlotTaken,
+} from "./firebase.js";
+
 const servicesData = {
   homme: [
     { title: "Coupe classique", price: "20 €", desc: "Coiffure propre et adaptée à votre style." },
@@ -174,7 +181,6 @@ function startAuto() {
 if (galleryMain && galleryThumbs) initGallery();
 
 
-
 /* =========================================================
    7) MENU MOBILE
    ========================================================= */
@@ -219,7 +225,7 @@ function fillHours() {
 }
 
 if (rdvForm) {
-  rdvForm.addEventListener("submit", e => {
+  rdvForm.addEventListener("submit", async e => {
     e.preventDefault();
 
     const nom = document.getElementById("nom").value.trim();
@@ -230,11 +236,31 @@ if (rdvForm) {
     const heure = heureSelect.value;
 
     const rdv = getRDV();
-    if (rdv.some(r => r.date === date && r.heure === heure))
+
+    // Vérifie dans localStorage (appareil actuel)
+    if (rdv.some(r => r.date === date && r.heure === heure)) {
       return alert("Ce créneau est déjà réservé.");
+    }
+
+    // Vérifie dans Firestore (cloud) pour éviter les doublons entre appareils
+    const taken = await isSlotTaken(date, heure);
+    if (taken) {
+      return alert("Ce créneau est déjà réservé en ligne !");
+    }
 
     rdv.push({ nom, tel, email, service, date, heure });
     saveRDV(rdv);
+
+    // ✅ ENREGISTREMENT DANS FIRESTORE (cloud)
+    const reservationCloud = { nom, tel, email, service, date, heure };
+    saveReservationToCloud(reservationCloud)
+      .then((id) => {
+        console.log("Rendez-vous enregistré dans Firestore avec l'id :", id);
+      })
+      .catch((error) => {
+        console.error("Erreur lors de l'enregistrement dans Firestore :", error);
+        // On ne bloque pas le client : localStorage + WhatsApp fonctionnent quand même
+      });
 
     window.open("https://wa.me/3361453210?text=" + encodeURIComponent(
       `Bonjour, je souhaite un rendez-vous :
@@ -260,6 +286,7 @@ const loginBtn = document.getElementById("loginBtn");
 const logoutBtn = document.getElementById("logoutBtn");
 const clearAllBtn = document.getElementById("clearAll");
 const rdvTableBody = document.getElementById("rdvTableBody");
+const rdvCloudTableBody = document.getElementById("rdvCloudTableBody"); // 🔹 pour Firestore
 
 function loadAdmin() {
   const data = getRDV();
@@ -285,11 +312,67 @@ function loadAdmin() {
   });
 }
 
+// ---------- ADMIN CLOUD (Firestore) ----------
+async function loadAdminCloud() {
+  if (!rdvCloudTableBody) return;
+
+  try {
+    rdvCloudTableBody.innerHTML =
+      `<tr><td colspan="6" style="text-align:center;">Chargement des rendez-vous en ligne...</td></tr>`;
+
+    const data = await getReservationsFromCloud();
+
+    if (!data.length) {
+      rdvCloudTableBody.innerHTML =
+        `<tr><td colspan="6" style="text-align:center;">Aucun rendez-vous en ligne</td></tr>`;
+      return;
+    }
+
+    rdvCloudTableBody.innerHTML = data.map((r) => `
+      <tr>
+        <td>${r.nom}</td>
+        <td>${r.tel}</td>
+        <td>${r.service}</td>
+        <td>${r.date}</td>
+        <td>${r.heure}</td>
+        <td>
+          <button class="btn-delete-cloud" data-id="${r.id}">X</button>
+        </td>
+      </tr>
+    `).join("");
+
+    document.querySelectorAll(".btn-delete-cloud").forEach(btn => {
+      btn.addEventListener("click", async () => {
+        const id = btn.dataset.id;
+        if (!confirm("Supprimer ce rendez-vous (cloud) ?")) return;
+
+        try {
+          await deleteReservationFromCloud(id);
+          btn.closest("tr").remove();
+
+          if (!rdvCloudTableBody.querySelector("tr")) {
+            rdvCloudTableBody.innerHTML =
+              `<tr><td colspan="6" style="text-align:center;">Aucun rendez-vous en ligne</td></tr>`;
+          }
+        } catch (error) {
+          console.error("Erreur suppression Firestore :", error);
+          alert("Impossible de supprimer ce rendez-vous (cloud).");
+        }
+      });
+    });
+  } catch (error) {
+    console.error("Erreur chargement Firestore :", error);
+    rdvCloudTableBody.innerHTML =
+      `<tr><td colspan="6" style="text-align:center;">Erreur lors du chargement des rendez-vous en ligne</td></tr>`;
+  }
+}
+
 if (loginBtn) loginBtn.addEventListener("click", () => {
   if (document.getElementById("adminCode").value === ADMIN_CODE) {
     authBox.style.display = "none";
     adminPanel.style.display = "block";
-    loadAdmin();
+    loadAdmin();       // localStorage
+    loadAdminCloud();  // Firestore
   } else alert("Code incorrect !");
 });
 
@@ -302,8 +385,8 @@ if (clearAllBtn) clearAllBtn.addEventListener("click", () => {
   if (confirm("Supprimer tous les rendez-vous ?")) {
     saveRDV([]);
     loadAdmin();
+    // On laisse les rendez-vous cloud séparés (on pourrait ajouter un "reset cloud" plus tard)
   }
 });
-
 
 console.log("🚀 BeautyFull Salon & Barbershop — Script chargé et opérationnel !");

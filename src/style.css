@@ -658,69 +658,201 @@ a:active {
    ADMIN PANEL — DASHBOARD BEAUTYFULL
    ========================================================= */
 
-.admin-wrapper {
-  max-width: 1000px;
-  margin: 3rem auto;
-  padding: 2rem;
-  background: #111;
+/* Conteneur principal de la zone admin (dans admin.html : #admin-panel) */
+#admin-panel {
+  margin-top: 2.5rem;
+  padding: 1.5rem 1.25rem 2rem;
+  background: #101010;
   border-radius: var(--radius-lg);
   border: 1px solid rgba(255,255,255,.12);
   box-shadow: var(--shadow-soft);
-  text-align: center;
 }
 
-.admin-title {
-  font-size: 2rem;
-  font-family: Georgia,serif;
-  background: linear-gradient(90deg,var(--or),var(--or-light));
-  -webkit-background-clip: text;
-  color: transparent;
-  margin-bottom: 1.6rem;
+/* Sous-titres "Rendez-vous..." dans l'admin */
+#admin-panel .section-subtitle {
+  text-align: left;
+  margin: 0 0 0.75rem;
 }
 
-.admin-sub {
-  color: var(--txt-muted);
-  font-size: .9rem;
-  margin-bottom: 2rem;
+/* Bouton de déconnexion */
+#logoutBtn {
+  margin-bottom: 1.2rem;
 }
 
-.admin-auth-box {
-  background: #0d0d0d;
-  border: 1px solid rgba(255,255,255,.18);
+/* TABLEAUX RDV (local + cloud) - DESKTOP PAR DÉFAUT */
+.admin-table {
+  width: 100%;
+  border-collapse: collapse;
+  margin-top: 1rem;
+  font-size: .85rem;
   border-radius: var(--radius-md);
-  padding: 2rem;
-  margin: auto;
-  max-width: 400px;
-  box-shadow: var(--shadow-soft);
+  overflow: hidden;
 }
 
-#adminCode {
-  width: 100%;
-  background: #111;
-  border: 1px solid rgba(255,255,255,.18);
-  border-radius: var(--radius-sm);
-  padding: .8rem;
-  color: #fff;
-  margin-bottom: 1rem;
-}
-
-#loginBtn {
-  width: 100%;
+.admin-table thead {
   background: linear-gradient(135deg,var(--or),var(--or-light));
-  color: #000;
-  font-weight: 700;
-  text-transform: uppercase;
-  border: none;
-  border-radius: var(--radius-md);
+}
+
+.admin-table th {
   padding: .8rem;
+  text-transform: uppercase;
+  font-size: .7rem;
+  letter-spacing: .16em;
+  color: #000;
+  text-align: left;
+}
+
+.admin-table td {
+  padding: .75rem .8rem;
+  background: #141414;
+  border-bottom: 1px solid rgba(255,255,255,.06);
+}
+
+.admin-table tr:hover td {
+  background: rgba(255,255,255,.04);
+}
+
+/* Boutons de suppression dans les tableaux (local + cloud) */
+.btn-delete,
+.btn-delete-cloud {
+  background: var(--rouge);
+  border: none;
+  color: #fff;
+  padding: .35rem .7rem;
+  border-radius: var(--radius-sm);
   cursor: pointer;
+  font-size: .75rem;
+  font-weight: 600;
+  transition: .2s;
+}
+
+.btn-delete:hover,
+.btn-delete-cloud:hover {
+  transform: scale(1.08);
+  box-shadow: 0 0 10px rgba(176,33,36,.6);
+}
+
+/* Boutons "Déconnexion" et "Supprimer tous les rendez-vous" */
+#clearAll,
+#logoutBtn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: .4rem;
+  margin-top: 1.2rem;
+  background: #000;
+  border: 1px solid var(--or);
+  color: var(--or-light);
+  padding: .7rem 1.4rem;
+  border-radius: var(--radius-md);
+  cursor: pointer;
+  font-size: .8rem;
+  text-transform: uppercase;
+  letter-spacing: .12em;
   transition: var(--transition);
 }
 
-#loginBtn:hover {
-  transform: translateY(-5px);
-  box-shadow: 0 20px 46px rgba(212,175,55,.55);
+#clearAll:hover,
+#logoutBtn:hover {
+  background: var(--or-light);
+  color: #000;
+  transform: translateY(-3px);
 }
+
+/* ============================
+   RESPONSIVE ADMIN
+   ============================ */
+
+/* Tablettes */
+@media (max-width: 900px) {
+  #admin-panel {
+    padding: 1.3rem 1rem 1.7rem;
+  }
+}
+
+/* Mobiles : on transforme chaque ligne en "carte" verticale */
+@media (max-width: 700px) {
+  #admin-panel {
+    padding: 1.2rem .8rem 1.5rem;
+  }
+
+  /* On cache l'en-tête du tableau */
+  .admin-table thead {
+    display: none;
+  }
+
+  .admin-table {
+    border-radius: 0;
+    border: none;
+  }
+
+  .admin-table tbody {
+    display: block;
+  }
+
+  .admin-table tr {
+    display: block;
+    margin-bottom: 1rem;
+    border: 1px solid rgba(255,255,255,.12);
+    border-radius: var(--radius-md);
+    overflow: hidden;
+    box-shadow: var(--shadow-soft);
+    background: #121212;
+  }
+
+  .admin-table td {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: .55rem .7rem;
+    border-bottom: 1px solid rgba(255,255,255,.06);
+    font-size: .8rem;
+  }
+
+  .admin-table td:last-child {
+    border-bottom: none;
+    justify-content: flex-end;
+  }
+
+  /* Labels pour chaque champ (utilise l'ordre des colonnes) */
+  .admin-table td::before {
+    content: attr(data-label);
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: .08em;
+    font-size: .7rem;
+    color: var(--txt-muted);
+    margin-right: .5rem;
+  }
+
+  /* On ajoute les labels via nth-child */
+  .admin-table tbody tr td:nth-child(1)::before { content: "Nom"; }
+  .admin-table tbody tr td:nth-child(2)::before { content: "Téléphone"; }
+  .admin-table tbody tr td:nth-child(3)::before { content: "Service"; }
+  .admin-table tbody tr td:nth-child(4)::before { content: "Date"; }
+  .admin-table tbody tr td:nth-child(5)::before { content: "Heure"; }
+  .admin-table tbody tr td:nth-child(6)::before { content: "Supprimer"; }
+
+  /* Boutons pleine largeur */
+  #clearAll,
+  #logoutBtn {
+    width: 100%;
+    justify-content: center;
+  }
+}
+
+/* Très petits écrans */
+@media (max-width: 480px) {
+  .admin-table td {
+    padding: .45rem .6rem;
+    font-size: .75rem;
+  }
+
+  .admin-table td::before {
+    font-size: .68rem;
+  }
+}
+
 
 /* TABLEAU RDV */
 

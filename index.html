@@ -1,0 +1,151 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <title>BeautyFull Salon & Barbershop – Évry-Courcouronnes</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+  <!-- SEO -->
+  <meta name="description" content="BeautyFull Salon & Barbershop à Évry-Courcouronnes. Spécialistes cheveux afro, barbershop, coloration, coupes hommes, femmes et enfants.">
+  <meta name="theme-color" content="#D4AF37">
+
+  <!-- CSS -->
+  <link rel="stylesheet" href="./src/style.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+</head>
+<body>
+
+<header class="site-header">
+  <div class="nav-inner">
+    <div class="logo-block">
+      <div class="logo-main">BeautyFull</div>
+      <div class="logo-sub">Salon & Barbershop</div>
+    </div>
+
+    <button id="menu-toggle" class="menu-toggle">☰</button>
+
+    <nav id="nav-menu">
+      <a href="#hero" class="nav-link">Accueil</a>
+      <a href="#services" class="nav-link">Services</a>
+      <a href="#galerie" class="nav-link">Galerie</a>
+      <a href="#avis" class="nav-link">Avis</a>
+      <a href="#contact" class="nav-link">Contact</a>
+      <a href="./pages/rendez-vous.html" class="nav-link nav-gold">Rendez-vous</a>
+    </nav>
+  </div>
+</header>
+
+<!-- HERO -->
+<section id="hero" class="hero">
+  <div class="hero-left">
+    <h1 class="hero-title">BeautyFull Salon & Barbershop</h1>
+    <p class="hero-text">
+      Coiffure homme, femme et enfant. Spécialistes cheveux afro, bouclés, frisés et lisses.
+      Dégradés, barbes, colorations, soins, tresses, brushing.
+    </p>
+
+    <a href="./pages/rendez-vous.html" class="btn-primary">PRENDRE RENDEZ-VOUS</a>
+
+    <div class="hero-tags">
+      <span class="chip">Cheveux afro & crépus</span>
+      <span class="chip">Dégradés & barbes</span>
+      <span class="chip">Coloration & soins</span>
+      <span class="chip">Coupes enfants</span>
+    </div>
+  </div>
+
+  <div class="hero-right">
+    <img src="./src/images/a.jpg" alt="BeautyFull Salon & Barbershop">
+  </div>
+</section>
+
+<!-- SERVICES -->
+<section id="services" class="section">
+  <div class="section-inner">
+    <h2 class="section-title">Nos Services</h2>
+    <p class="section-subtitle">
+      Sélectionnez une catégorie pour découvrir nos prestations.
+    </p>
+
+    <div class="tabs">
+      <button class="tab-button active" data-category="homme">Homme</button>
+      <button class="tab-button" data-category="femme">Femme</button>
+      <button class="tab-button" data-category="enfant">Enfants</button>
+    </div>
+
+    <div id="services-container" class="services-grid"></div>
+  </div>
+</section>
+
+<!-- GALERIE -->
+<section id="galerie" class="section">
+  <div class="section-inner">
+    <h2 class="section-title">Galerie</h2>
+
+    <div class="gallery">
+      <div class="gallery-main" id="gallery-main"></div>
+      <div class="gallery-thumbs" id="gallery-thumbs"></div>
+    </div>
+
+  </div>
+</section>
+
+<!-- AVIS -->
+<section id="avis" class="section">
+  <div class="section-inner">
+    <h2 class="section-title">Avis Clients</h2>
+    <p class="section-subtitle">Ce que nos clients pensent de nous</p>
+
+    <div id="reviews-container" class="reviews-grid"></div>
+  </div>
+</section>
+
+<!-- CONTACT -->
+<section id="contact" class="section">
+  <div class="section-inner contact-layout">
+
+    <div>
+      <h2 class="section-title">Contact</h2>
+
+      <p class="contact-block">
+        <strong>BeautyFull Salon & Barbershop</strong><br>
+        8 Place des Aunettes<br>
+        91000 Évry-Courcouronnes
+      </p>
+
+      <p class="contact-block">
+        <strong>Téléphone :</strong> 01 64 57 13 36<br>
+        <strong>WhatsApp :</strong> 07 61 45 32 10<br>
+        <strong>Email :</strong> contact@beautyfull-evry.fr
+      </p>
+
+      <p class="contact-block">
+        <strong>Horaires :</strong><br>
+        Lundi – Dimanche : 10h00 – 20h00
+      </p>
+    </div>
+
+    <div class="contact-social">
+      <h3 class="contact-subtitle">Réseaux sociaux</h3>
+
+      <div class="social-icons">
+        <a href="#" target="_blank"><i class="fab fa-instagram"></i></a>
+        <a href="#" target="_blank"><i class="fab fa-tiktok"></i></a>
+        <a href="#" target="_blank"><i class="fab fa-facebook-f"></i></a>
+      </div>
+
+      <a href="./pages/rendez-vous.html" class="btn-primary" style="margin-top:1.3rem;">
+        PRENDRE RENDEZ-VOUS
+      </a>
+    </div>
+
+  </div>
+</section>
+
+<footer class="site-footer">
+  © <span id="year"></span> BeautyFull Salon & Barbershop – Évry-Courcouronnes.
+</footer>
+
+<script src="./src/script.js"></script>
+</body>
+</html>

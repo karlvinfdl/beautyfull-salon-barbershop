@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <title>Admin – BeautyFull Salon & Barbershop</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <script type="module" crossorigin src="/beautyfull-salon-barbershop/assets/script-LON7mB7F.js"></script>
+  <link rel="stylesheet" crossorigin href="/beautyfull-salon-barbershop/assets/style-D3cCKqLo.css">
+</head>
+<body>
+
+<section class="section">
+  <div class="section-inner" style="max-width:900px;">
+
+    <h1 class="section-title">Panneau Administrateur</h1>
+    <p class="section-subtitle">Gestion des rendez-vous enregistrés</p>
+
+    <!-- Authentification -->
+    <div id="auth-container" class="rdv-form" style="margin-top:2rem;">
+      <h3 style="margin-bottom:1rem;">Connexion admin</h3>
+
+      <div class="form-group">
+        <label>Code secret</label>
+        <input type="password" id="adminCode" placeholder="****">
+      </div>
+
+      <button id="loginBtn" class="btn-submit">Se connecter</button>
+    </div>
+
+    <!-- Panel admin -->
+    <div id="admin-panel" style="display:none; margin-top:3rem;">
+
+      <button id="logoutBtn" class="btn-primary" style="margin-bottom:1.6rem;">Déconnexion</button>
+
+      <table class="admin-table">
+        <thead>
+          <tr>
+            <th>Nom</th>
+            <th>Téléphone</th>
+            <th>Service</th>
+            <th>Date</th>
+            <th>Heure</th>
+            <th>Supprimer</th>
+          </tr>
+        </thead>
+        <tbody id="rdvTableBody">
+          <!-- JS injecte ici -->
+        </tbody>
+      </table>
+
+      <button id="clearAll" class="btn-submit" style="background:#B02124;color:white;">
+        Supprimer tous les rendez-vous
+      </button>
+
+    </div>
+
+  </div>
+</section>
+
+<footer class="site-footer">
+  © <span id="year"></span> BeautyFull Salon & Barbershop – Évry-Courcouronnes.
+</footer>
+
+
+</body>
+</html>

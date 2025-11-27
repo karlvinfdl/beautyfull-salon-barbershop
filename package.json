@@ -1,16 +1,24 @@
 {
-  "name": "checklist",
+  "name": "beautyfull-salon-barbershop",
   "version": "1.0.0",
-  "description": "Checklist web interactive avec tâches fixes et personnalisées.",
+  "description": "Site officiel BeautyFull Salon & Barbershop à Évry-Courcouronnes : coiffure homme, femme, enfant, spécialisation cheveux afro.",
   "scripts": {
     "dev": "vite",
     "build": "vite build",
     "preview": "vite preview",
     "deploy": "gh-pages -d dist"
   },
-  "author": "",
-  "license": "ISC",
-  "keywords": [],
+  "author": "Karl Vinfdl",
+  "license": "MIT",
+  "keywords": [
+    "salon",
+    "barbershop",
+    "coiffure",
+    "beautyfull",
+    "evry",
+    "rdv"
+  ],
+  "homepage": "https://karlvinfdl.github.io/beautyfull-salon-barbershop/",
   "devDependencies": {
     "vite": "^5.0.0",
     "gh-pages": "^6.0.0"

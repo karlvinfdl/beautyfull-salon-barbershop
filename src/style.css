@@ -405,3 +405,151 @@ body {
    SUPPRESSION TOTALE DES SOULIGNEMENTS
    ========================================================= */
 a, a:hover, a:focus, a:active { text-decoration:none !important; }
+
+
+/* =========================================================
+   ADMIN PANEL — DASHBOARD BEAUTYFULL
+   ========================================================= */
+
+.admin-wrapper {
+  max-width: 1000px;
+  margin: 3rem auto;
+  padding: 2rem;
+  background: #111;
+  border-radius: var(--radius-lg);
+  border: 1px solid rgba(255,255,255,.12);
+  box-shadow: var(--shadow-soft);
+  text-align: center;
+}
+
+.admin-title {
+  font-size: 2rem;
+  font-family: Georgia, serif;
+  background: linear-gradient(90deg,var(--or),var(--or-light));
+  -webkit-background-clip:text;
+  color: transparent;
+  margin-bottom: 1.6rem;
+}
+
+.admin-sub {
+  color: var(--txt-muted);
+  font-size: .9rem;
+  margin-bottom: 2rem;
+}
+
+/* CHAMP CODE ADMIN */
+
+.admin-auth-box {
+  background: #0d0d0d;
+  border: 1px solid rgba(255,255,255,.18);
+  border-radius: var(--radius-md);
+  padding: 2rem;
+  margin: auto;
+  max-width: 400px;
+  box-shadow: var(--shadow-soft);
+}
+
+#adminCode {
+  width: 100%;
+  background: #111;
+  border: 1px solid rgba(255,255,255,.18);
+  border-radius: var(--radius-sm);
+  padding: .8rem;
+  color: #fff;
+  margin-bottom: 1rem;
+}
+
+#loginBtn {
+  width: 100%;
+  background: linear-gradient(135deg, var(--or), var(--or-light));
+  color: #000;
+  font-weight: 700;
+  text-transform: uppercase;
+  border: none;
+  border-radius: var(--radius-md);
+  padding: .8rem;
+  cursor: pointer;
+  transition: var(--transition);
+}
+
+#loginBtn:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 20px 46px rgba(212,175,55,.55);
+}
+
+/* TABLEAU RDV */
+
+.admin-table {
+  width: 100%;
+  border-collapse: collapse;
+  margin-top: 2rem;
+  border-radius: var(--radius-md);
+  overflow: hidden;
+  font-size: .9rem;
+}
+
+.admin-table th {
+  background: linear-gradient(135deg,var(--or),var(--or-light));
+  color: #000;
+  padding: .9rem;
+  text-transform: uppercase;
+  font-size: .75rem;
+  letter-spacing: .14em;
+}
+
+.admin-table td {
+  padding: 1rem;
+  background: #131313;
+  border-bottom: 1px solid rgba(255,255,255,.06);
+}
+
+.admin-table tr:hover td {
+  background: rgba(255,255,255,.05);
+}
+
+/* BOUTONS */
+
+.btn-delete {
+  background: var(--rouge);
+  border: none;
+  color: #fff;
+  padding: .45rem .75rem;
+  border-radius: var(--radius-sm);
+  cursor: pointer;
+  transition: .25s;
+  font-size: .8rem;
+  font-weight: 600;
+}
+
+.btn-delete:hover {
+  transform: scale(1.12);
+  box-shadow: 0 0 10px rgba(176,33,36,.6);
+}
+
+#clearAll,
+#logoutBtn {
+  margin-top: 1.4rem;
+  display: inline-block;
+  background: #000;
+  border: 1px solid var(--or);
+  color: var(--or-light);
+  padding: .8rem 1.6rem;
+  border-radius: var(--radius-md);
+  cursor: pointer;
+  transition: var(--transition);
+}
+
+#clearAll:hover,
+#logoutBtn:hover {
+  background: var(--or-light);
+  color: #000;
+  transform: translateY(-4px);
+}
+
+/* RESPONSIVE */
+
+@media(max-width:600px) {
+  .admin-wrapper { padding: 1.4rem; }
+  .admin-table td, .admin-table th { font-size: .75rem; padding: .6rem; }
+  #logoutBtn, #clearAll { width:100%; }
+}

@@ -1,0 +1,35 @@
+image: node:18
+
+stages:
+  - build
+  - deploy
+
+cache:
+  paths:
+    - node_modules/
+
+variables:
+  NODE_ENV: production
+
+before_script:
+  - npm ci
+
+build:
+  stage: build
+  script:
+    - npm run build            # produit le dossier `dist`
+  artifacts:
+    paths:
+      - dist
+    expire_in: 1 week
+
+pages:
+  stage: deploy
+  script:
+    - mkdir .public
+    - cp -r dist/* .public/
+  artifacts:
+    paths:
+      - .public
+  only:
+    - main

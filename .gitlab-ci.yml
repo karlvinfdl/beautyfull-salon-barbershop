@@ -14,6 +14,7 @@ variables:
 
 before_script:
   - npm ci
+  - npm install -g vite
 
 build:
   stage: build

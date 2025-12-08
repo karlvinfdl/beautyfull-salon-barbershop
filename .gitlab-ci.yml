@@ -1,39 +1,45 @@
-# .gitlab-ci.yml pour Vite + GitLab Pages
-image: node:20  # Node 20 pour éviter les warnings Firebase
+# Utilise Node 20 pour éviter les warnings Firebase
+image: node:20
 
+# Définition des étapes
 stages:
   - build
   - deploy
 
+# Cache les dépendances npm pour accélérer les builds
 cache:
   paths:
     - node_modules/
 
+# Variables d'environnement
 variables:
   NODE_ENV: production
 
+# Étape avant tout script
 before_script:
-  - npm ci
+  - npm ci   # installe proprement les dépendances avec le lockfile
 
+# Étape Build
 build:
   stage: build
   script:
-    - npm run build        # crée le dossier dist
+    - npm run build  # crée le dossier dist avec la version de production
   artifacts:
     paths:
-      - dist
+      - dist         # conserve le dossier dist pour l'étape suivante
     expire_in: 1 week
 
+# Étape Deploy (GitLab Pages)
 pages:
   stage: deploy
   script:
-    # préparer le dossier public pour GitLab Pages
+    # Crée le dossier public attendu par GitLab Pages
     - mkdir public
     - cp -r dist/* public/
-    # créer un fallback 404.html pour SPA
+    # Crée un fallback 404.html pour les SPA
     - echo '<meta http-equiv="refresh" content="0; url=index.html">' > public/404.html
   artifacts:
     paths:
-      - public
+      - public        # GitLab Pages publie le contenu de public/
   only:
-    - main
+    - main             # ne se déclenche que sur la branche main

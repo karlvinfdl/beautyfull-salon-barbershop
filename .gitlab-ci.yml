@@ -13,13 +13,12 @@ variables:
   NODE_ENV: production
 
 before_script:
-  - npm ci
-  - npm install -g vite
+  - npm ci   # installe toutes les dépendances depuis package-lock.json
 
 build:
   stage: build
   script:
-    - npm run build        # crée le dossier dist
+    - npx vite build   # utilise le binaire Vite local, plus besoin de l'installer globalement
   artifacts:
     paths:
       - dist
@@ -31,7 +30,7 @@ pages:
     # préparer le dossier public pour GitLab Pages
     - mkdir .public
     - cp -r dist/* .public/
-    # créer un fallback 404.html pour SPA
+    # créer un fallback 404.html pour SPA (routes côté client)
     - echo '<meta http-equiv="refresh" content="0; url=index.html">' > .public/404.html
   artifacts:
     paths:

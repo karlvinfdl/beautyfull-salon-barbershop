@@ -1,3 +1,4 @@
+# .gitlab-ci.yml pour Vite + GitLab Pages (SPA friendly)
 image: node:18
 
 stages:
@@ -17,7 +18,7 @@ before_script:
 build:
   stage: build
   script:
-    - npm run build            # produit le dossier `dist`
+    - npm run build        # crée le dossier dist
   artifacts:
     paths:
       - dist
@@ -26,8 +27,11 @@ build:
 pages:
   stage: deploy
   script:
+    # préparer le dossier public pour GitLab Pages
     - mkdir .public
     - cp -r dist/* .public/
+    # créer un fallback 404.html pour SPA
+    - echo '<meta http-equiv="refresh" content="0; url=index.html">' > .public/404.html
   artifacts:
     paths:
       - .public

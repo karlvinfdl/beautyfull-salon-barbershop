@@ -2,78 +2,228 @@
 <html lang="fr">
 <head>
   <meta charset="UTF-8">
-  <title>Admin – BeautyFull Salon & Barbershop</title>
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <link rel="shortcut icon" href="/beautyfull-salon-barbershop/assets/logo-C56UtDAC.png" />
-  <script type="module" crossorigin src="/beautyfull-salon-barbershop/assets/script-BmXv66Xk.js"></script>
-  <link rel="stylesheet" crossorigin href="/beautyfull-salon-barbershop/assets/script-D3rYY0aB.css">
+  <title>Admin – Atelier Couture & Retouche</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <script type="module" crossorigin src="../assets/script-CPZWQQBE.js"></script>
+  <link rel="stylesheet" crossorigin href="../assets/script-CA5qClzR.css">
 </head>
 <body>
 
 <section class="section">
-  <div class="section-inner" style="max-width:900px;">
+  <div class="section-inner" style="max-width:1000px;">
 
     <h1 class="section-title">Panneau Administrateur</h1>
-    <p class="section-subtitle">Gestion des rendez-vous enregistrés</p>
+    <p class="section-subtitle">Gestion des commandes de retouche</p>
 
     <!-- Authentification -->
     <div id="auth-container" class="rdv-form" style="margin-top:2rem;">
       <h3 style="margin-bottom:1rem;">Connexion admin</h3>
 
       <div class="form-group">
-        <label>Code secret</label>
-        <input type="password" id="adminCode" placeholder="****">
+        <label>Email</label>
+        <input type="email" id="adminEmail" placeholder="admin@atelier.fr">
+      </div>
+
+      <div class="form-group">
+        <label>Mot de passe</label>
+        <input type="password" id="adminPassword" placeholder="********">
       </div>
 
       <button id="loginBtn" class="btn-submit">Se connecter</button>
+      <p id="authError" class="rdv-note" style="color:#ff8a8a; display:none;"></p>
     </div>
 
     <!-- Panel admin -->
-    <div id="admin-panel" style="display:none; margin-top:3rem;">
+    <div id="admin-panel" style="display:none; margin-top:2rem;">
 
       <button id="logoutBtn" class="btn-primary" style="margin-bottom:1.6rem;">Déconnexion</button>
 
-      <!-- TABLEAU LOCALSTORAGE (EXISTANT) -->
-      <h2 class="section-subtitle" style="margin-bottom:0.8rem;">Rendez-vous (stockés sur cet appareil)</h2>
-      <table class="admin-table">
-        <thead>
-          <tr>
-            <th>Nom</th>
-            <th>Téléphone</th>
-            <th>Service</th>
-            <th>Date</th>
-            <th>Heure</th>
-            <th>Supprimer</th>
-          </tr>
-        </thead>
-        <tbody id="rdvTableBody">
-          <!-- JS injecte ici -->
-        </tbody>
-      </table>
+      <div class="tabs" style="max-width:600px;">
+        <button class="tab-button active" data-tab="commandes">Commandes</button>
+        <button class="tab-button" data-tab="clients">Clients</button>
+        <button class="tab-button" data-tab="prestations">Prestations</button>
+      </div>
 
-      <button id="clearAll" class="btn-submit" style="background:#B02124;color:white; margin-top:1rem;">
-        Supprimer tous les rendez-vous (local)
-      </button>
+      <!-- ===================== ONGLET COMMANDES ===================== -->
+      <div id="tab-commandes" class="admin-tab">
 
-      <!-- TABLEAU FIRESTORE (CLOUD) -->
-      <h2 class="section-subtitle" style="margin-top:2.5rem; margin-bottom:0.8rem;">
-        Rendez-vous en ligne (cloud)
-      </h2>
-      <table class="admin-table">
-        <thead>
-          <tr>
-            <th>Nom</th>
-            <th>Téléphone</th>
-            <th>Service</th>
-            <th>Date</th>
-            <th>Heure</th>
-            <th>Supprimer</th>
-          </tr>
-        </thead>
-        <tbody id="rdvCloudTableBody">
-          <!-- JS injecte ici les données Firestore -->
-        </tbody>
-      </table>
+        <h2 class="section-subtitle">Commandes en cours</h2>
+
+        <div class="filters-bar">
+          <select id="filterStatut">
+            <option value="">Tous les statuts</option>
+            <option value="en_cours">En cours</option>
+            <option value="prete">Prête</option>
+            <option value="recuperee">Récupérée</option>
+          </select>
+          <button id="newCommandeBtn" class="btn-submit" style="width:auto;">+ Nouvelle commande</button>
+        </div>
+
+        <!-- Formulaire ajout/modification commande -->
+        <form id="commandeForm" class="rdv-form" style="display:none; margin:1.5rem 0;">
+          <input type="hidden" id="commandeId">
+
+          <div class="form-group">
+            <label>Client existant</label>
+            <select id="commandeClientSelect">
+              <option value="">— Nouveau client —</option>
+            </select>
+          </div>
+
+          <div id="newClientFields">
+            <div class="form-group">
+              <label>Nom du client *</label>
+              <input type="text" id="commandeClientNom" placeholder="Ex : Samira Diallo">
+            </div>
+            <div class="form-group">
+              <label>Téléphone *</label>
+              <input type="tel" id="commandeClientTel" placeholder="06 xx xx xx xx">
+            </div>
+            <div class="form-group">
+              <label>Email (optionnel)</label>
+              <input type="email" id="commandeClientEmail">
+            </div>
+          </div>
+
+          <div class="form-group">
+            <label>Description de la prestation *</label>
+            <input type="text" id="commandeDescription" placeholder="Ex : Ourlet pantalon x2">
+          </div>
+
+          <div class="form-group">
+            <label>Prix (€) *</label>
+            <input type="number" id="commandePrix" min="0" step="0.5">
+          </div>
+
+          <div class="form-group">
+            <label>Date de dépôt *</label>
+            <input type="date" id="commandeDateDepot">
+          </div>
+
+          <div class="form-group">
+            <label>Date de retrait prévue *</label>
+            <input type="date" id="commandeDateRetrait">
+          </div>
+
+          <div class="form-group">
+            <label>Statut</label>
+            <select id="commandeStatut">
+              <option value="en_cours">En cours</option>
+              <option value="prete">Prête</option>
+              <option value="recuperee">Récupérée</option>
+            </select>
+          </div>
+
+          <button type="submit" class="btn-submit">Enregistrer</button>
+          <button type="button" id="cancelCommandeBtn" class="btn-submit" style="background:transparent; border:1px solid var(--or); color:var(--or-light); margin-top:.6rem;">Annuler</button>
+        </form>
+
+        <table class="admin-table">
+          <thead>
+            <tr>
+              <th>Client</th>
+              <th>Description</th>
+              <th>Prix</th>
+              <th>Dépôt</th>
+              <th>Retrait prévu</th>
+              <th>Statut</th>
+              <th>Actions</th>
+            </tr>
+          </thead>
+          <tbody id="commandesTableBody">
+            <!-- JS injecte ici -->
+          </tbody>
+        </table>
+      </div>
+
+      <!-- ===================== ONGLET CLIENTS ===================== -->
+      <div id="tab-clients" class="admin-tab" style="display:none;">
+
+        <h2 class="section-subtitle">Clients</h2>
+
+        <table class="admin-table">
+          <thead>
+            <tr>
+              <th>Nom</th>
+              <th>Téléphone</th>
+              <th>Email</th>
+              <th>Actions</th>
+            </tr>
+          </thead>
+          <tbody id="clientsTableBody">
+            <!-- JS injecte ici -->
+          </tbody>
+        </table>
+
+        <!-- Fiche client -->
+        <div id="clientDetail" class="client-detail" style="display:none;">
+          <h3 id="clientDetailName" class="section-subtitle"></h3>
+          <p id="clientDetailInfo" class="rdv-note"></p>
+
+          <h4 style="margin:1.2rem 0 .5rem;">Historique des commandes</h4>
+          <table class="admin-table">
+            <thead>
+              <tr>
+                <th>Description</th>
+                <th>Prix</th>
+                <th>Retrait prévu</th>
+                <th>Statut</th>
+              </tr>
+            </thead>
+            <tbody id="clientCommandesBody"></tbody>
+          </table>
+
+          <h4 style="margin:1.2rem 0 .5rem;">Messagerie</h4>
+          <div id="messagesThread" class="msg-thread"></div>
+
+          <form id="replyForm" class="rdv-form" style="margin-top:1rem;">
+            <div class="form-group">
+              <label>Répondre au client</label>
+              <textarea id="replyContenu" rows="3" placeholder="Votre message..."></textarea>
+            </div>
+            <button type="submit" class="btn-submit">Envoyer</button>
+          </form>
+
+          <button id="closeClientDetail" class="btn-submit" style="background:transparent; border:1px solid var(--or); color:var(--or-light); margin-top:1rem;">Fermer la fiche client</button>
+        </div>
+      </div>
+
+      <!-- ===================== ONGLET PRESTATIONS ===================== -->
+      <div id="tab-prestations" class="admin-tab" style="display:none;">
+
+        <h2 class="section-subtitle">Prestations affichées sur le site</h2>
+
+        <form id="prestationForm" class="rdv-form" style="margin-bottom:1.5rem;">
+          <input type="hidden" id="prestationId">
+          <div class="form-group">
+            <label>Nom *</label>
+            <input type="text" id="prestationNom" placeholder="Ex : Ourlet pantalon">
+          </div>
+          <div class="form-group">
+            <label>Description</label>
+            <input type="text" id="prestationDescription" placeholder="Ex : Ourlet simple, toutes matières">
+          </div>
+          <div class="form-group">
+            <label>Prix (€) *</label>
+            <input type="number" id="prestationPrix" min="0" step="0.5">
+          </div>
+          <button type="submit" class="btn-submit">Enregistrer la prestation</button>
+        </form>
+
+        <table class="admin-table">
+          <thead>
+            <tr>
+              <th>Nom</th>
+              <th>Description</th>
+              <th>Prix</th>
+              <th>Actions</th>
+            </tr>
+          </thead>
+          <tbody id="prestationsTableBody">
+            <!-- JS injecte ici -->
+          </tbody>
+        </table>
+      </div>
 
     </div>
 
@@ -81,9 +231,9 @@
 </section>
 
 <footer class="site-footer">
-  © <span id="year"></span> BeautyFull Salon & Barbershop – Évry-Courcouronnes.
+  © <span id="year"></span> Atelier Couture & Retouche – Évry-Courcouronnes.
 </footer>
-
+
 
 </body>
 </html>

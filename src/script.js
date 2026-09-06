@@ -255,6 +255,17 @@ function statutPill(statut) {
   return `<span class="status-pill ${statut}">${statutLabel(statut)}</span>`;
 }
 
+function commandeNumero(commande) {
+  return commande.numero ? `#${commande.numero}` : "—";
+}
+
+// Prochain numéro de commande séquentiel (#1, #2, ...), calculé côté client à
+// partir des commandes déjà chargées. Suffisant pour un seul admin ; pas besoin
+// d'un compteur transactionnel côté serveur pour ce volume.
+function nextCommandeNumero() {
+  return commandesCache.reduce((max, c) => Math.max(max, c.numero || 0), 0) + 1;
+}
+
 async function initAdminData() {
   await Promise.all([loadClients(), loadPrestations()]);
   await loadCommandes();
@@ -347,6 +358,7 @@ async function openClientThread(clientId) {
         .map(
           (c) => `
         <tr>
+          <td class="mono">${commandeNumero(c)}</td>
           <td>${c.description}</td>
           <td>${c.prix} €</td>
           <td>${c.date_retrait_prevue}</td>
@@ -354,7 +366,7 @@ async function openClientThread(clientId) {
         </tr>`
         )
         .join("")
-    : `<tr><td colspan="4" style="text-align:center;">Aucune commande</td></tr>`;
+    : `<tr><td colspan="5" style="text-align:center;">Aucune commande</td></tr>`;
 
   const messages = await getMessagesByClient(clientId);
   messagesThread.innerHTML = messages.length
@@ -426,6 +438,7 @@ function renderCommandes() {
         .map(
           (c) => `
         <tr>
+          <td class="mono">${commandeNumero(c)}</td>
           <td>${clientNom(c.client_id)}</td>
           <td>${c.description}</td>
           <td>${c.prix} €</td>
@@ -439,7 +452,7 @@ function renderCommandes() {
         </tr>`
         )
         .join("")
-    : `<tr><td colspan="7" style="text-align:center;">Aucune commande</td></tr>`;
+    : `<tr><td colspan="8" style="text-align:center;">Aucune commande</td></tr>`;
 
   commandesTableBody.querySelectorAll("button[data-edit-id]").forEach((btn) => {
     btn.addEventListener("click", () => editCommande(btn.dataset.editId));
@@ -452,9 +465,9 @@ function renderCommandes() {
 
 const STATUT_MESSAGES = {
   en_cours: (client, c) =>
-    `Bonjour ${client.nom}, votre commande (${c.description}) est bien prise en charge chez GS Retoucherie. Retrait prévu le ${c.date_retrait_prevue}.`,
+    `Bonjour ${client.nom}, votre commande ${commandeNumero(c)} (${c.description}) est bien prise en charge chez GS Retoucherie. Retrait prévu le ${c.date_retrait_prevue}.`,
   prete: (client, c) =>
-    `Bonjour ${client.nom}, votre commande (${c.description}) est prête ! Vous pouvez venir la récupérer à l'atelier, 26 Cours Blaise Pascal, Évry-Courcouronnes.`,
+    `Bonjour ${client.nom}, votre commande ${commandeNumero(c)} (${c.description}) est prête ! Vous pouvez venir la récupérer à l'atelier, 26 Cours Blaise Pascal, Évry-Courcouronnes.`,
   recuperee: (client, c) =>
     `Bonjour ${client.nom}, merci pour votre confiance chez GS Retoucherie !`,
 };
@@ -520,6 +533,7 @@ function renderDashboard() {
         .map(
           (c) => `
         <tr>
+          <td class="mono">${commandeNumero(c)}</td>
           <td>${clientNom(c.client_id)}</td>
           <td>${c.description}</td>
           <td>${c.date_retrait_prevue}</td>
@@ -527,7 +541,7 @@ function renderDashboard() {
         </tr>`
         )
         .join("")
-    : `<tr><td colspan="4" style="text-align:center;">Aucune commande en cours</td></tr>`;
+    : `<tr><td colspan="5" style="text-align:center;">Aucune commande en cours</td></tr>`;
 }
 
 if (filterStatut) filterStatut.addEventListener("change", renderCommandes);
@@ -607,6 +621,7 @@ if (commandeForm) {
     if (commandeId) {
       await updateCommande(commandeId, data);
     } else {
+      data.numero = nextCommandeNumero();
       await addCommande(data);
     }
 

@@ -153,6 +153,10 @@ table.hours tr.closed td:last-child{ color:#CB9282; }
 .addr-block{ margin-top:26px; font-size:0.92rem; color:#CFC6AE; }
 .addr-block strong{ display:block; color:#fff; font-size:1.05rem; margin-bottom:4px; font-family:'Instrument Serif', serif; font-weight:400; }
 .map-embed iframe{ display:block; width:100%; border-radius:3px; border:1px solid rgba(255,255,255,0.25); }
+.facade-photo{
+  display:block; width:100%; height:180px; object-fit:cover;
+  border-radius:3px; border:1px solid rgba(255,255,255,0.25); margin-bottom:14px;
+}
 
 /* =========================================================
    FORMULAIRE CONTACT (ticket)

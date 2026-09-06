@@ -139,21 +139,6 @@ nav.links a{ text-decoration:none; font-size:0.92rem; font-weight:500; }
 .swatch .price{ font-family:'IBM Plex Mono', monospace; font-size:0.88rem; color:var(--rust-deep); font-weight:500; }
 
 /* =========================================================
-   AVIS
-   ========================================================= */
-
-.split{ display:grid; grid-template-columns:1fr 1fr; gap:56px; align-items:center; }
-.quote{ margin-bottom:30px; }
-.quote p{ font-family:'Instrument Serif', serif; font-style:italic; font-size:1.4rem; margin:0 0 10px; line-height:1.35; }
-.chalk-line{ width:70px; height:8px; margin-bottom:14px; }
-.quote-attr{ font-size:0.84rem; color:var(--steel-deep); font-weight:600; }
-.atelier-photo{
-  background:var(--paper-alt); border:1px dashed var(--line); border-radius:3px;
-  aspect-ratio:1/1; display:flex; align-items:center; justify-content:center;
-  color:var(--steel); font-size:0.85rem; text-align:center; padding:24px;
-}
-
-/* =========================================================
    HORAIRES (band)
    ========================================================= */
 
@@ -196,7 +181,7 @@ footer.site-footer{ padding:34px 0 40px; font-size:0.84rem; color:var(--steel-de
 .footer-grid{ display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:14px; max-width:1140px; margin:0 auto; padding:0 28px; }
 
 @media (max-width: 860px){
-  .hero-grid, .split, .band-grid, .form-grid, .swatch-grid{ grid-template-columns:1fr; }
+  .hero-grid, .band-grid, .form-grid, .swatch-grid{ grid-template-columns:1fr; }
   .hero h1{ font-size:2.5rem; }
   nav.links{
     position:absolute; top:100%; left:0; right:0; background:var(--paper);

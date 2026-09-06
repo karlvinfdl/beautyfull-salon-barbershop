@@ -38,17 +38,7 @@ const SWATCH_ICON = `<svg viewBox="0 0 34 34" fill="none"><circle cx="17" cy="17
 
 
 /* =========================================================
-   2) AVIS CLIENTS
-   ========================================================= */
-
-const reviewsData = [
-  { text: "Un accueil patient, qui prend le temps d'expliquer chaque retouche.", author: "Client de l'atelier" },
-  { text: "On y va pour un ourlet, on repart avec un vêtement qui a une seconde vie.", author: "Cliente du quartier" },
-];
-
-
-/* =========================================================
-   3) ANNÉE FOOTER
+   2) ANNÉE FOOTER
    ========================================================= */
 
 const yearElement = document.getElementById("year");
@@ -56,7 +46,7 @@ if (yearElement) yearElement.textContent = new Date().getFullYear();
 
 
 /* =========================================================
-   4) PRESTATIONS PUBLIQUES (index.html)
+   3) PRESTATIONS PUBLIQUES (index.html)
    ========================================================= */
 
 const servicesContainer = document.getElementById("services-container");
@@ -91,26 +81,7 @@ if (servicesContainer) {
 
 
 /* =========================================================
-   5) AVIS
-   ========================================================= */
-
-const reviewsContainer = document.getElementById("reviews-container");
-if (reviewsContainer) {
-  reviewsContainer.innerHTML = reviewsData
-    .map(
-      (r) => `
-      <div class="quote">
-        <svg class="chalk-line" viewBox="0 0 70 8"><path d="M2 5c15-6 40 6 66-1" stroke="#B4502E" stroke-width="2.5" fill="none" stroke-linecap="round"/></svg>
-        <p>« ${r.text} »</p>
-        <div class="quote-attr">${r.author}</div>
-      </div>`
-    )
-    .join("");
-}
-
-
-/* =========================================================
-   6) MENU MOBILE (site public)
+   4) MENU MOBILE (site public)
    ========================================================= */
 
 const menuToggle = document.getElementById("menuToggle");
@@ -122,7 +93,7 @@ if (menuToggle && navLinks) {
 
 
 /* =========================================================
-   7) FORMULAIRE DE CONTACT (index.html + pages/contact.html)
+   5) FORMULAIRE DE CONTACT (index.html + pages/contact.html)
    ========================================================= */
 
 const contactForm = document.getElementById("contactForm");
@@ -174,7 +145,7 @@ if (contactForm) {
 
 
 /* =========================================================
-   8) ADMIN — AUTHENTIFICATION
+   6) ADMIN — AUTHENTIFICATION
    ========================================================= */
 
 const adminPanel = document.getElementById("admin-panel");
@@ -220,7 +191,7 @@ if (adminPanel && authBox) {
 
 
 /* =========================================================
-   9) ADMIN — NAVIGATION (sidebar + mobile)
+   7) ADMIN — NAVIGATION (sidebar + mobile)
    ========================================================= */
 
 const sideNavButtons = document.querySelectorAll(".side-nav button[data-view]");
@@ -264,7 +235,7 @@ if (adminMenuToggle && sidebar && scrim) {
 
 
 /* =========================================================
-   10) ADMIN — DONNÉES (clients / commandes / prestations)
+   8) ADMIN — DONNÉES (clients / commandes / prestations)
    ========================================================= */
 
 let clientsCache = [];

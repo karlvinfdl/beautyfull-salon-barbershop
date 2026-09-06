@@ -131,6 +131,12 @@ if (contactForm) {
   contactForm.addEventListener("submit", async (e) => {
     e.preventDefault();
 
+    // Ouvre l'onglet WhatsApp tout de suite (dans le geste utilisateur du clic),
+    // sinon les navigateurs bloquent window.open() une fois les appels
+    // Firestore (async) terminés, car ce n'est plus considéré comme une
+    // action utilisateur directe.
+    const waWindow = window.open("about:blank", "_blank");
+
     const nom = document.getElementById("nom").value.trim();
     const tel = document.getElementById("tel").value.trim();
     const email = document.getElementById("email").value.trim();
@@ -146,16 +152,21 @@ if (contactForm) {
         lu: false,
       });
 
-      window.open(
+      const waUrl =
         "https://wa.me/33696114806?text=" +
-          encodeURIComponent(`Bonjour, je vous contacte via le site :\nNom: ${nom}\nMessage: ${message}`),
-        "_blank"
-      );
+        encodeURIComponent(`Bonjour, je vous contacte via le site :\nNom: ${nom}\nMessage: ${message}`);
+
+      if (waWindow) {
+        waWindow.location.href = waUrl;
+      } else {
+        window.open(waUrl, "_blank");
+      }
 
       alert("Votre message a été envoyé !");
       contactForm.reset();
     } catch (error) {
       console.error("Erreur lors de l'envoi du message :", error);
+      if (waWindow) waWindow.close();
       alert("Une erreur est survenue, merci de réessayer.");
     }
   });

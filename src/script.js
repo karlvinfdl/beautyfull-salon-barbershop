@@ -619,6 +619,12 @@ if (commandeForm) {
 
     const commandeId = document.getElementById("commandeId").value;
     if (commandeId) {
+      // Attribue un numéro aux commandes créées avant l'ajout de cette
+      // fonctionnalité, si elles n'en ont pas encore.
+      const existante = commandesCache.find((c) => c.id === commandeId);
+      if (existante && !existante.numero) {
+        data.numero = nextCommandeNumero();
+      }
       await updateCommande(commandeId, data);
     } else {
       data.numero = nextCommandeNumero();

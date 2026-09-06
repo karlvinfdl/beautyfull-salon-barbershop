@@ -488,10 +488,15 @@ const STATUT_MESSAGES = {
     `Bonjour ${client.nom}, merci pour votre confiance chez GS Retoucherie !`,
 };
 
-// Convertit un numéro local (ex: 06 12 34 56 78) en format international pour wa.me.
-// Hypothèse : clients en France métropolitaine (+33) — à ajuster si besoin.
+// Convertit un numéro de téléphone en format international pour wa.me (chiffres
+// uniquement, sans "+"). Si le numéro contient déjà un indicatif (ex: +596 696
+// 00 00 00, +33 6 12 34 56 78, +32 ..., peu importe le pays), il est simplement
+// nettoyé. Sinon (anciens numéros saisis sans indicatif), on suppose la France
+// métropolitaine (+33) par défaut.
 function toWhatsAppNumber(telephone) {
-  const digits = (telephone || "").replace(/\D/g, "");
+  const raw = (telephone || "").trim();
+  const digits = raw.replace(/\D/g, "");
+  if (raw.startsWith("+")) return digits;
   return digits.startsWith("0") ? "33" + digits.slice(1) : digits;
 }
 

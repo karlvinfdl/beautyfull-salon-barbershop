@@ -6,13 +6,21 @@ import {
   collection,
   addDoc,
   getDocs,
-  deleteDoc,
+  getDoc,
+  updateDoc,
   doc,
   serverTimestamp,
   orderBy,
   query,
   where,
 } from "firebase/firestore";
+import {
+  getAuth,
+  signInWithEmailAndPassword,
+  signInAnonymously,
+  signOut,
+  onAuthStateChanged,
+} from "firebase/auth";
 
 const firebaseConfig = {
   apiKey: "AIzaSyBg-kW04PQNYFcnRWoBhYco2IyLe9fKoJ0",
@@ -25,36 +33,134 @@ const firebaseConfig = {
 
 const app = initializeApp(firebaseConfig);
 const db = getFirestore(app);
-const reservationsCol = collection(db, "reservations");
+const auth = getAuth(app);
 
-// Enregistre un rendez-vous dans Firestore
-export async function saveReservationToCloud(reservation) {
-  const docRef = await addDoc(reservationsCol, {
-    ...reservation,
+const prestationsCol = collection(db, "prestations");
+const clientsCol = collection(db, "clients");
+const commandesCol = collection(db, "commandes");
+const messagesCol = collection(db, "messages");
+
+/* =========================================================
+   AUTHENTIFICATION
+   ========================================================= */
+
+// Connexion admin (email/mot de passe), utilisée par le panneau admin.
+export async function loginAdmin(email, password) {
+  const credential = await signInWithEmailAndPassword(auth, email, password);
+  return credential.user;
+}
+
+export async function logoutAdmin() {
+  await signOut(auth);
+}
+
+// Prévient le panneau admin quand l'état de connexion change.
+export function onAdminAuthChange(callback) {
+  return onAuthStateChanged(auth, callback);
+}
+
+// Authentifie le visiteur anonymement avant l'envoi du formulaire de contact
+// public (nécessaire pour satisfaire les Security Rules côté serveur).
+export async function signInAsVisitor() {
+  if (auth.currentUser) return auth.currentUser;
+  const credential = await signInAnonymously(auth);
+  return credential.user;
+}
+
+/* =========================================================
+   PRESTATIONS
+   ========================================================= */
+
+export async function getPrestations() {
+  const snapshot = await getDocs(prestationsCol);
+  return snapshot.docs.map((d) => ({ id: d.id, ...d.data() }));
+}
+
+export async function addPrestation(prestation) {
+  const docRef = await addDoc(prestationsCol, prestation);
+  return docRef.id;
+}
+
+export async function updatePrestation(id, data) {
+  await updateDoc(doc(db, "prestations", id), data);
+}
+
+/* =========================================================
+   CLIENTS
+   ========================================================= */
+
+export async function getClients() {
+  const snapshot = await getDocs(clientsCol);
+  return snapshot.docs.map((d) => ({ id: d.id, ...d.data() }));
+}
+
+export async function getClient(id) {
+  const snapshot = await getDoc(doc(db, "clients", id));
+  return snapshot.exists() ? { id: snapshot.id, ...snapshot.data() } : null;
+}
+
+export async function addClient(client) {
+  const docRef = await addDoc(clientsCol, client);
+  return docRef.id;
+}
+
+export async function updateClient(id, data) {
+  await updateDoc(doc(db, "clients", id), data);
+}
+
+/* =========================================================
+   COMMANDES
+   ========================================================= */
+
+export async function getCommandes() {
+  const snapshot = await getDocs(
+    query(commandesCol, orderBy("date_retrait_prevue", "asc"))
+  );
+  return snapshot.docs.map((d) => ({ id: d.id, ...d.data() }));
+}
+
+export async function getCommandesByClient(clientId) {
+  const snapshot = await getDocs(
+    query(commandesCol, where("client_id", "==", clientId))
+  );
+  return snapshot.docs.map((d) => ({ id: d.id, ...d.data() }));
+}
+
+export async function addCommande(commande) {
+  const docRef = await addDoc(commandesCol, {
+    ...commande,
     createdAt: serverTimestamp(),
   });
   return docRef.id;
 }
 
-// Récupère tous les rendez-vous depuis Firestore (les plus récents en premier)
-export async function getReservationsFromCloud() {
-  const q = query(reservationsCol, orderBy("createdAt", "desc"));
-  const snapshot = await getDocs(q);
+export async function updateCommande(id, data) {
+  await updateDoc(doc(db, "commandes", id), data);
+}
+
+/* =========================================================
+   MESSAGES
+   ========================================================= */
+
+export async function getMessagesByClient(clientId) {
+  const snapshot = await getDocs(
+    query(
+      messagesCol,
+      where("client_id", "==", clientId),
+      orderBy("date", "asc")
+    )
+  );
   return snapshot.docs.map((d) => ({ id: d.id, ...d.data() }));
 }
 
-// Vérifie si un créneau (date + heure) est déjà pris dans Firestore
-export async function isSlotTaken(date, heure) {
-  const q = query(
-    reservationsCol,
-    where("date", "==", date),
-    where("heure", "==", heure)
-  );
-  const snapshot = await getDocs(q);
-  return !snapshot.empty;
+export async function addMessage(message) {
+  const docRef = await addDoc(messagesCol, {
+    ...message,
+    date: serverTimestamp(),
+  });
+  return docRef.id;
 }
 
-// Supprime un rendez-vous dans Firestore
-export async function deleteReservationFromCloud(id) {
-  await deleteDoc(doc(db, "reservations", id));
+export async function markMessageRead(id) {
+  await updateDoc(doc(db, "messages", id), { lu: true });
 }

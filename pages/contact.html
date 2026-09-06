@@ -2,41 +2,42 @@
 <html lang="fr">
 <head>
   <meta charset="UTF-8">
-  <title>Prendre rendez-vous – BeautyFull Salon & Barbershop</title>
+  <title>Contact – Atelier Couture & Retouche</title>
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <link rel="stylesheet" href="../src/style.css">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
-  <link rel="shortcut icon" href="../src/images/logo.png" />
 </head>
 <body>
 
 <header class="site-header">
   <div class="nav-inner">
     <div class="logo-block">
-      <div class="logo-main">BeautyFull</div>
-      <div class="logo-sub">Salon & Barbershop</div>
+      <div class="logo-main">Atelier Couture</div>
+      <div class="logo-sub">& Retouche</div>
     </div>
 
     <button id="menu-toggle" class="menu-toggle">☰</button>
     <nav id="nav-menu">
       <a href="../index.html" class="nav-link">Accueil</a>
-      <a href="../index.html#services" class="nav-link">Services</a>
+      <a href="../index.html#prestations" class="nav-link">Prestations</a>
       <a href="../index.html#galerie" class="nav-link">Galerie</a>
       <a href="../index.html#avis" class="nav-link">Avis</a>
       <a href="../index.html#contact" class="nav-link">Contact</a>
-      <a href="./rendez-vous.html" class="nav-link nav-gold">Rendez-vous</a>
+      <a href="./contact.html" class="nav-link nav-gold">Nous contacter</a>
     </nav>
   </div>
 </header>
 
 <section class="section">
   <div class="section-inner">
-    <h1 class="section-title">Prendre rendez-vous</h1>
+    <h1 class="section-title">Nous contacter</h1>
     <p class="section-subtitle">
-      Choisissez votre créneau et validez votre réservation.
+      Décrivez votre besoin de retouche, nous vous répondons rapidement.
+      Aucun rendez-vous n'est nécessaire pour un essayage : passez à l'atelier
+      pendant nos horaires d'ouverture.
     </p>
 
-    <form id="rdvForm" class="rdv-form">
+    <form id="contactForm" class="rdv-form">
 
       <div class="form-group">
         <label>Nom complet *</label>
@@ -54,30 +55,11 @@
       </div>
 
       <div class="form-group">
-        <label>Service souhaité *</label>
-        <select id="service" required>
-          <option value="">Sélectionnez un service...</option>
-          <option>Coupe homme</option>
-          <option>Dégradé / Fade</option>
-          <option>Coupe + Barbe</option>
-          <option>Coloration / Mèches</option>
-          <option>Soin cheveux afro</option>
-          <option>Coupe femme & brushing</option>
-          <option>Coupe enfant</option>
-        </select>
+        <label>Votre message *</label>
+        <textarea id="message" required rows="5" placeholder="Ex : ourlet à faire sur un pantalon, disponible ce week-end..."></textarea>
       </div>
 
-      <div class="form-group">
-        <label>Date souhaitée *</label>
-        <input type="date" id="date" required>
-      </div>
-
-      <div class="form-group">
-        <label>Heure souhaitée *</label>
-        <select id="heure" required></select>
-      </div>
-
-      <button type="submit" class="btn-submit">Valider le rendez-vous</button>
+      <button type="submit" class="btn-submit">Envoyer</button>
       <p class="rdv-note">Une confirmation WhatsApp vous sera envoyée.</p>
 
     </form>
@@ -86,11 +68,10 @@
 </section>
 
 <footer class="site-footer">
-  © <span id="year"></span> BeautyFull Salon & Barbershop – Évry-Courcouronnes.
+  © <span id="year"></span> Atelier Couture & Retouche.
 </footer>
 
 <script type="module" src="../src/script.js"></script>
 
 </body>
 </html>
-

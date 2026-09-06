@@ -1,7 +1,7 @@
 {
   "name": "beautyfull-salon-barbershop",
   "version": "1.0.0",
-  "description": "Site officiel BeautyFull Salon & Barbershop à Évry-Courcouronnes : coiffure homme, femme, enfant, spécialisation cheveux afro.",
+  "description": "Site officiel de l'Atelier Couture & Retouche à Évry-Courcouronnes : ourlets, reprises, retouches sur mesure.",
   "scripts": {
     "dev": "vite",
     "build": "vite build",
@@ -11,12 +11,11 @@
   "author": "Karl Vinfdl",
   "license": "MIT",
   "keywords": [
-    "salon",
-    "barbershop",
-    "coiffure",
-    "beautyfull",
-    "evry",
-    "rdv"
+    "couture",
+    "retouche",
+    "couturier",
+    "atelier",
+    "evry"
   ],
   "homepage": "https://karlvinfdl.github.io/beautyfull-salon-barbershop/",
   "dependencies": {

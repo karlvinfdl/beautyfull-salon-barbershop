@@ -1,0 +1,62 @@
+rules_version = '2';
+
+service cloud.firestore {
+  match /databases/{database}/documents {
+
+    function isAdmin() {
+      return request.auth != null &&
+        exists(/databases/$(database)/documents/admins/$(request.auth.uid));
+    }
+
+    // Prestations : visibles publiquement, modifiables seulement par l'admin.
+    match /prestations/{id} {
+      allow read: if true;
+      allow write: if isAdmin();
+    }
+
+    // Clients : lecture/modification/suppression réservées à l'admin.
+    // Création autorisée pour un visiteur authentifié (auth anonyme incluse),
+    // uniquement avec les champs attendus par le formulaire de contact public.
+    match /clients/{id} {
+      allow read, update, delete: if isAdmin();
+      allow create: if isAdmin() || (
+        request.auth != null &&
+        request.resource.data.keys().hasOnly(['nom', 'telephone', 'email']) &&
+        request.resource.data.nom is string &&
+        request.resource.data.telephone is string
+      );
+    }
+
+    // Commandes : jamais accessibles publiquement, gérées uniquement par l'admin.
+    match /commandes/{id} {
+      allow read, write: if isAdmin();
+    }
+
+    // Messages : lecture/modification/suppression réservées à l'admin.
+    // Création autorisée pour un visiteur authentifié, uniquement en tant que
+    // message entrant non lu (empêche de se faire passer pour le couturier).
+    match /messages/{id} {
+      allow read, update, delete: if isAdmin();
+      allow create: if isAdmin() || (
+        request.auth != null &&
+        request.resource.data.keys().hasOnly(['client_id', 'contenu', 'sens', 'lu', 'date']) &&
+        request.resource.data.sens == 'client_vers_couturier' &&
+        request.resource.data.lu == false &&
+        request.resource.data.client_id is string &&
+        request.resource.data.contenu is string
+      );
+    }
+
+    // Allow-list des comptes admin : gérée à la main dans la console Firebase,
+    // jamais lue ni modifiée depuis le client.
+    match /admins/{uid} {
+      allow read, write: if false;
+    }
+
+    // Deny-by-default : tout ce qui n'est pas explicitement autorisé ci-dessus
+    // est bloqué, y compris toute collection future non prévue.
+    match /{document=**} {
+      allow read, write: if false;
+    }
+  }
+}

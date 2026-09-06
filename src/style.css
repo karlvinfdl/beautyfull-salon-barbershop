@@ -1,5 +1,5 @@
 /* =========================================================
-   BEAUTYFULL SALON & BARBERSHOP
+   ATELIER COUTURE & RETOUCHE
    THEME PREMIUM : NOIR • ROUGE • OR
    ========================================================= */
 
@@ -196,6 +196,25 @@ body {
 }
 
 .hero-right img:hover { filter: brightness(1.05); }
+
+.hero-placeholder {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  padding: 2rem;
+  background: repeating-linear-gradient(
+    45deg,
+    rgba(255,255,255,.04),
+    rgba(255,255,255,.04) 12px,
+    rgba(255,255,255,.02) 12px,
+    rgba(255,255,255,.02) 24px
+  );
+  color: var(--txt-muted);
+  font-size: .9rem;
+  text-transform: uppercase;
+  letter-spacing: .12em;
+}
 
 /* =========================================================
    SECTIONS
@@ -655,7 +674,7 @@ a:active {
 }
 
 /* =========================================================
-   ADMIN PANEL — DASHBOARD BEAUTYFULL
+   ADMIN PANEL — DASHBOARD ATELIER COUTURE & RETOUCHE
    ========================================================= */
 
 /* Conteneur principal de la zone admin (dans admin.html : #admin-panel) */
@@ -932,4 +951,109 @@ a:active {
   #clearAll {
     width: 100%;
   }
+}
+
+/* =========================================================
+   ADMIN — COMMANDES / CLIENTS / PRESTATIONS
+   ========================================================= */
+
+.filters-bar {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 1rem;
+  align-items: center;
+  margin: 1rem 0;
+}
+
+.filters-bar select {
+  background: #111;
+  border-radius: var(--radius-sm);
+  padding: .7rem 1rem;
+  border: 1px solid rgba(255,255,255,.15);
+  color: #fff;
+}
+
+.status-badge {
+  display: inline-block;
+  padding: .3rem .7rem;
+  border-radius: 999px;
+  font-size: .7rem;
+  text-transform: uppercase;
+  letter-spacing: .08em;
+  font-weight: 700;
+}
+
+.status-en_cours {
+  background: rgba(212,175,55,.18);
+  color: var(--or-light);
+}
+
+.status-prete {
+  background: rgba(58,168,90,.2);
+  color: #6fe19a;
+}
+
+.status-recuperee {
+  background: rgba(255,255,255,.08);
+  color: var(--txt-muted);
+}
+
+.btn-link {
+  background: transparent;
+  border: 1px solid var(--or);
+  color: var(--or-light);
+  padding: .35rem .7rem;
+  border-radius: var(--radius-sm);
+  cursor: pointer;
+  font-size: .75rem;
+  margin-right: .4rem;
+}
+
+.btn-link:hover {
+  background: var(--or-light);
+  color: #000;
+}
+
+.client-detail {
+  margin-top: 2rem;
+  padding: 1.5rem;
+  background: #0f0f0f;
+  border: 1px solid rgba(255,255,255,.12);
+  border-radius: var(--radius-md);
+}
+
+.msg-thread {
+  display: flex;
+  flex-direction: column;
+  gap: .6rem;
+  max-height: 320px;
+  overflow-y: auto;
+  padding: .5rem;
+  background: #0a0a0a;
+  border-radius: var(--radius-sm);
+}
+
+.msg-bubble {
+  max-width: 75%;
+  padding: .6rem .9rem;
+  border-radius: var(--radius-sm);
+  font-size: .85rem;
+}
+
+.msg-bubble.from-client {
+  align-self: flex-start;
+  background: rgba(255,255,255,.08);
+}
+
+.msg-bubble.from-couturier {
+  align-self: flex-end;
+  background: linear-gradient(135deg,var(--or),var(--or-light));
+  color: #000;
+}
+
+.msg-bubble time {
+  display: block;
+  font-size: .65rem;
+  opacity: .6;
+  margin-top: .25rem;
 }

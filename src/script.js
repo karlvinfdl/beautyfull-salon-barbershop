@@ -1,5 +1,5 @@
 /* =========================================================
-   ATELIER COUTURE & RETOUCHE – SCRIPT GLOBAL
+   GS RETOUCHERIE – SCRIPT GLOBAL
    ========================================================= */
 
 import {
@@ -26,15 +26,15 @@ import {
    ========================================================= */
 
 const FALLBACK_PRESTATIONS = [
-  { nom: "Ourlet pantalon", description: "Sans doublure, toutes matières.", prix: 12 },
-  { nom: "Ourlet robe / jupe", description: "Ajustement de longueur.", prix: 15 },
-  { nom: "Reprise de taille", description: "Pantalon ou jupe, avant/arrière.", prix: 18 },
-  { nom: "Changement fermeture éclair", description: "Pantalon ou jupe.", prix: 15 },
-  { nom: "Changement fermeture éclair", description: "Blouson ou manteau.", prix: 25 },
-  { nom: "Retouche de manches", description: "Veste ou chemise.", prix: 20 },
-  { nom: "Reprise d'épaules", description: "Veste ou manteau.", prix: 22 },
-  { nom: "Réparation de doublure", description: "Toutes pièces.", prix: 15 },
+  { nom: "Ourlet / longueur", description: "Pantalons, robes, manteaux ajustés à la bonne taille.", prix: "dès 10 €" },
+  { nom: "Cintrage / reprise", description: "Vestes, chemises, robes repris à votre silhouette.", prix: "dès 15 €" },
+  { nom: "Fermetures éclair", description: "Blousons, jupes, sacs — remplacement toutes tailles.", prix: "dès 12 €" },
+  { nom: "Cuir & maroquinerie", description: "Blousons, manteaux, accessoires en cuir.", prix: "sur devis" },
+  { nom: "Pièces de cérémonie", description: "Robes de mariée, costumes, avec essayage dédié.", prix: "sur devis" },
+  { nom: "Retouche express", description: "Petites réparations réalisées pendant votre attente.", prix: "dès 8 €" },
 ];
+
+const SWATCH_ICON = `<svg viewBox="0 0 34 34" fill="none"><circle cx="17" cy="17" r="12" stroke="#B4502E" stroke-width="1.6"/><path d="M17 9v8l6 4" stroke="#B4502E" stroke-width="1.6"/></svg>`;
 
 
 /* =========================================================
@@ -42,9 +42,8 @@ const FALLBACK_PRESTATIONS = [
    ========================================================= */
 
 const reviewsData = [
-  { name: "Karim", text: "Ourlet parfait, fait en 2 jours seulement !", stars: 5 },
-  { name: "Mariam", text: "Retouche impeccable sur ma robe de mariage.", stars: 5 },
-  { name: "Yanis", text: "Service rapide et couturier très à l'écoute.", stars: 5 },
+  { text: "Un accueil patient, qui prend le temps d'expliquer chaque retouche.", author: "Client de l'atelier" },
+  { text: "On y va pour un ourlet, on repart avec un vêtement qui a une seconde vie.", author: "Cliente du quartier" },
 ];
 
 
@@ -65,14 +64,15 @@ const servicesContainer = document.getElementById("services-container");
 function renderPrestations(prestations) {
   servicesContainer.innerHTML = "";
   prestations.forEach((p) => {
-    const card = document.createElement("article");
-    card.classList.add("service-card");
+    const card = document.createElement("div");
+    card.classList.add("swatch");
     card.innerHTML = `
-      <div class="service-card-header">
-        <span class="service-title">${p.nom}</span>
-        <span class="service-price">${p.prix} €</span>
+      ${SWATCH_ICON}
+      <div>
+        <h3>${p.nom}</h3>
+        <p>${p.description || ""}</p>
+        <div class="price">${p.prix}</div>
       </div>
-      <p class="service-desc">${p.description || ""}</p>
     `;
     servicesContainer.appendChild(card);
   });
@@ -91,38 +91,38 @@ if (servicesContainer) {
 
 
 /* =========================================================
-   5) AVIS DYNAMIQUES
+   5) AVIS
    ========================================================= */
 
 const reviewsContainer = document.getElementById("reviews-container");
 if (reviewsContainer) {
-  reviewsData.forEach((r) => {
-    const card = document.createElement("article");
-    card.classList.add("review-card");
-    card.innerHTML = `
-      <div class="review-stars">${"★".repeat(r.stars)}</div>
-      <p class="review-text">${r.text}</p>
-      <p class="review-author">${r.name}</p>
-    `;
-    reviewsContainer.appendChild(card);
-  });
+  reviewsContainer.innerHTML = reviewsData
+    .map(
+      (r) => `
+      <div class="quote">
+        <svg class="chalk-line" viewBox="0 0 70 8"><path d="M2 5c15-6 40 6 66-1" stroke="#B4502E" stroke-width="2.5" fill="none" stroke-linecap="round"/></svg>
+        <p>« ${r.text} »</p>
+        <div class="quote-attr">${r.author}</div>
+      </div>`
+    )
+    .join("");
 }
 
 
 /* =========================================================
-   6) MENU MOBILE
+   6) MENU MOBILE (site public)
    ========================================================= */
 
-const menuToggle = document.getElementById("menu-toggle");
-const navMenu = document.getElementById("nav-menu");
+const menuToggle = document.getElementById("menuToggle");
+const navLinks = document.getElementById("navLinks");
 
-if (menuToggle && navMenu) {
-  menuToggle.addEventListener("click", () => navMenu.classList.toggle("open"));
+if (menuToggle && navLinks) {
+  menuToggle.addEventListener("click", () => navLinks.classList.toggle("open"));
 }
 
 
 /* =========================================================
-   7) FORMULAIRE DE CONTACT (pages/contact.html)
+   7) FORMULAIRE DE CONTACT (index.html + pages/contact.html)
    ========================================================= */
 
 const contactForm = document.getElementById("contactForm");
@@ -171,6 +171,7 @@ const authBox = document.getElementById("auth-container");
 const authError = document.getElementById("authError");
 const loginBtn = document.getElementById("loginBtn");
 const logoutBtn = document.getElementById("logoutBtn");
+const adminUserLabel = document.getElementById("adminUserLabel");
 
 if (loginBtn) {
   loginBtn.addEventListener("click", async () => {
@@ -196,10 +197,11 @@ if (adminPanel && authBox) {
   onAdminAuthChange((user) => {
     if (user && !user.isAnonymous) {
       authBox.style.display = "none";
-      adminPanel.style.display = "block";
+      adminPanel.style.display = "flex";
+      if (adminUserLabel) adminUserLabel.textContent = user.email || "Gérant";
       initAdminData();
     } else {
-      authBox.style.display = "block";
+      authBox.style.display = "flex";
       adminPanel.style.display = "none";
     }
   });
@@ -207,20 +209,47 @@ if (adminPanel && authBox) {
 
 
 /* =========================================================
-   9) ADMIN — ONGLETS
+   9) ADMIN — NAVIGATION (sidebar + mobile)
    ========================================================= */
 
-const tabButtonsAdmin = document.querySelectorAll("#admin-panel .tab-button");
-const adminTabs = document.querySelectorAll(".admin-tab");
+const sideNavButtons = document.querySelectorAll(".side-nav button[data-view]");
+const adminViews = document.querySelectorAll(".admin-view");
+const topbarTitle = document.getElementById("topbarTitle");
+const sidebar = document.getElementById("sidebar");
+const scrim = document.getElementById("scrim");
+const adminMenuToggle = document.getElementById("menuToggle");
 
-tabButtonsAdmin.forEach((btn) => {
-  btn.addEventListener("click", () => {
-    tabButtonsAdmin.forEach((b) => b.classList.remove("active"));
-    btn.classList.add("active");
-    adminTabs.forEach((tab) => (tab.style.display = "none"));
-    document.getElementById(`tab-${btn.dataset.tab}`).style.display = "block";
-  });
+const VIEW_TITLES = {
+  dashboard: "Tableau de bord",
+  commandes: "Commandes",
+  prestations: "Prestations",
+  clients: "Clients",
+  messages: "Messages",
+};
+
+function closeSidebar() {
+  if (sidebar) sidebar.classList.remove("open");
+  if (scrim) scrim.classList.remove("open");
+}
+
+function activateView(view) {
+  sideNavButtons.forEach((b) => b.classList.toggle("active", b.dataset.view === view));
+  adminViews.forEach((v) => v.classList.toggle("active", v.id === `view-${view}`));
+  if (topbarTitle) topbarTitle.textContent = VIEW_TITLES[view] || view;
+  closeSidebar();
+}
+
+sideNavButtons.forEach((btn) => {
+  btn.addEventListener("click", () => activateView(btn.dataset.view));
 });
+
+if (adminMenuToggle && sidebar && scrim) {
+  adminMenuToggle.addEventListener("click", () => {
+    sidebar.classList.add("open");
+    scrim.classList.add("open");
+  });
+  scrim.addEventListener("click", closeSidebar);
+}
 
 
 /* =========================================================
@@ -240,6 +269,10 @@ function statutLabel(statut) {
   return { en_cours: "En cours", prete: "Prête", recuperee: "Récupérée" }[statut] || statut;
 }
 
+function statutPill(statut) {
+  return `<span class="status-pill ${statut}">${statutLabel(statut)}</span>`;
+}
+
 async function initAdminData() {
   await Promise.all([loadClients(), loadPrestations()]);
   await loadCommandes();
@@ -249,6 +282,7 @@ async function initAdminData() {
 
 const commandeClientSelect = document.getElementById("commandeClientSelect");
 const clientsTableBody = document.getElementById("clientsTableBody");
+const messagesClientList = document.getElementById("messagesClientList");
 
 async function loadClients() {
   clientsCache = await getClients();
@@ -269,40 +303,64 @@ async function loadClients() {
           <td>${c.nom}</td>
           <td>${c.telephone}</td>
           <td>${c.email || "—"}</td>
-          <td><button class="btn-link" data-client-id="${c.id}">Voir la fiche</button></td>
+          <td class="row-actions"><button data-client-id="${c.id}">Voir</button></td>
         </tr>`
         )
         .join("")
     : `<tr><td colspan="4" style="text-align:center;">Aucun client</td></tr>`;
 
   clientsTableBody.querySelectorAll("button[data-client-id]").forEach((btn) => {
-    btn.addEventListener("click", () => openClientDetail(btn.dataset.clientId));
+    btn.addEventListener("click", () => {
+      activateView("messages");
+      openClientThread(btn.dataset.clientId);
+    });
+  });
+
+  messagesClientList.innerHTML = clientsCache.length
+    ? clientsCache
+        .map(
+          (c) => `
+        <button class="msg-item" data-client-id="${c.id}">
+          <div class="name">${c.nom}</div>
+          <div class="sub">${c.telephone}</div>
+        </button>`
+        )
+        .join("")
+    : `<div class="msg-detail-empty">Aucun client</div>`;
+
+  messagesClientList.querySelectorAll("button[data-client-id]").forEach((btn) => {
+    btn.addEventListener("click", () => openClientThread(btn.dataset.clientId));
   });
 }
 
-/* ---------- Fiche client + messagerie ---------- */
+/* ---------- Messages (fiche client + fil de discussion) ---------- */
 
-const clientDetail = document.getElementById("clientDetail");
-const clientDetailName = document.getElementById("clientDetailName");
-const clientDetailInfo = document.getElementById("clientDetailInfo");
-const clientCommandesBody = document.getElementById("clientCommandesBody");
+const messagesEmpty = document.getElementById("messagesEmpty");
+const messagesDetail = document.getElementById("messagesDetail");
+const messagesClientName = document.getElementById("messagesClientName");
+const messagesClientInfo = document.getElementById("messagesClientInfo");
+const messagesHistoryBody = document.getElementById("messagesHistoryBody");
 const messagesThread = document.getElementById("messagesThread");
 const replyForm = document.getElementById("replyForm");
-const closeClientDetailBtn = document.getElementById("closeClientDetail");
 
 let currentClientId = null;
 
-async function openClientDetail(clientId) {
+async function openClientThread(clientId) {
   currentClientId = clientId;
   const client = clientsCache.find((c) => c.id === clientId);
   if (!client) return;
 
-  clientDetail.style.display = "block";
-  clientDetailName.textContent = client.nom;
-  clientDetailInfo.textContent = `${client.telephone}${client.email ? " — " + client.email : ""}`;
+  messagesClientList.querySelectorAll(".msg-item").forEach((el) => {
+    el.classList.toggle("active", el.dataset.clientId === clientId);
+  });
+
+  messagesEmpty.style.display = "none";
+  messagesDetail.style.display = "flex";
+  messagesClientName.textContent = client.nom;
+  messagesClientInfo.textContent = `${client.telephone}${client.email ? " — " + client.email : ""}`;
 
   const commandes = await getCommandesByClient(clientId);
-  clientCommandesBody.innerHTML = commandes.length
+  messagesHistoryBody.innerHTML = commandes.length
     ? commandes
         .map(
           (c) => `
@@ -310,24 +368,26 @@ async function openClientDetail(clientId) {
           <td>${c.description}</td>
           <td>${c.prix} €</td>
           <td>${c.date_retrait_prevue}</td>
-          <td><span class="status-badge status-${c.statut}">${statutLabel(c.statut)}</span></td>
+          <td>${statutPill(c.statut)}</td>
         </tr>`
         )
         .join("")
     : `<tr><td colspan="4" style="text-align:center;">Aucune commande</td></tr>`;
 
   const messages = await getMessagesByClient(clientId);
-  messagesThread.innerHTML = messages
-    .map((m) => {
-      const isClient = m.sens === "client_vers_couturier";
-      const date = m.date && m.date.toDate ? m.date.toDate().toLocaleString("fr-FR") : "";
-      return `
-        <div class="msg-bubble ${isClient ? "from-client" : "from-couturier"}">
-          ${m.contenu}
-          <time>${date}</time>
-        </div>`;
-    })
-    .join("") || `<p class="rdv-note">Aucun message.</p>`;
+  messagesThread.innerHTML = messages.length
+    ? messages
+        .map((m) => {
+          const isClient = m.sens === "client_vers_couturier";
+          const date = m.date && m.date.toDate ? m.date.toDate().toLocaleString("fr-FR") : "";
+          return `
+            <div class="bubble ${isClient ? "in" : "out"}">
+              ${m.contenu}
+              <time>${date}</time>
+            </div>`;
+        })
+        .join("")
+    : `<p style="color:var(--muted); font-size:0.85rem;">Aucun message.</p>`;
 
   await Promise.all(
     messages.filter((m) => m.sens === "client_vers_couturier" && !m.lu).map((m) => markMessageRead(m.id))
@@ -350,14 +410,7 @@ if (replyForm) {
     });
 
     document.getElementById("replyContenu").value = "";
-    openClientDetail(currentClientId);
-  });
-}
-
-if (closeClientDetailBtn) {
-  closeClientDetailBtn.addEventListener("click", () => {
-    clientDetail.style.display = "none";
-    currentClientId = null;
+    openClientThread(currentClientId);
   });
 }
 
@@ -367,12 +420,19 @@ const commandesTableBody = document.getElementById("commandesTableBody");
 const filterStatut = document.getElementById("filterStatut");
 const newCommandeBtn = document.getElementById("newCommandeBtn");
 const commandeForm = document.getElementById("commandeForm");
+const commandeFormWrap = document.getElementById("commandeFormWrap");
 const cancelCommandeBtn = document.getElementById("cancelCommandeBtn");
 const newClientFields = document.getElementById("newClientFields");
+const dashboardTableBody = document.getElementById("dashboardTableBody");
+const statEnCours = document.getElementById("statEnCours");
+const statPretes = document.getElementById("statPretes");
+const statRecupereesMois = document.getElementById("statRecupereesMois");
+const statCaMois = document.getElementById("statCaMois");
 
 async function loadCommandes() {
   commandesCache = await getCommandes();
   renderCommandes();
+  renderDashboard();
 }
 
 function renderCommandes() {
@@ -389,8 +449,8 @@ function renderCommandes() {
           <td>${c.prix} €</td>
           <td>${c.date_depot}</td>
           <td>${c.date_retrait_prevue}</td>
-          <td><span class="status-badge status-${c.statut}">${statutLabel(c.statut)}</span></td>
-          <td><button class="btn-link" data-edit-id="${c.id}">Modifier</button></td>
+          <td>${statutPill(c.statut)}</td>
+          <td class="row-actions"><button data-edit-id="${c.id}">Modifier</button></td>
         </tr>`
         )
         .join("")
@@ -401,31 +461,69 @@ function renderCommandes() {
   });
 }
 
+function renderDashboard() {
+  if (!statEnCours) return;
+
+  const now = new Date();
+  const isCurrentMonth = (dateStr) => {
+    if (!dateStr) return false;
+    const d = new Date(dateStr);
+    return d.getFullYear() === now.getFullYear() && d.getMonth() === now.getMonth();
+  };
+
+  const enCours = commandesCache.filter((c) => c.statut === "en_cours");
+  const pretes = commandesCache.filter((c) => c.statut === "prete");
+  const recupereesMois = commandesCache.filter((c) => c.statut === "recuperee" && isCurrentMonth(c.date_retrait_prevue));
+  const caMois = commandesCache
+    .filter((c) => isCurrentMonth(c.date_depot))
+    .reduce((sum, c) => sum + (Number(c.prix) || 0), 0);
+
+  statEnCours.textContent = enCours.length;
+  statPretes.textContent = pretes.length;
+  statRecupereesMois.textContent = recupereesMois.length;
+  statCaMois.textContent = `${caMois} €`;
+
+  const upcoming = commandesCache.filter((c) => c.statut !== "recuperee").slice(0, 6);
+  dashboardTableBody.innerHTML = upcoming.length
+    ? upcoming
+        .map(
+          (c) => `
+        <tr>
+          <td>${clientNom(c.client_id)}</td>
+          <td>${c.description}</td>
+          <td>${c.date_retrait_prevue}</td>
+          <td>${statutPill(c.statut)}</td>
+        </tr>`
+        )
+        .join("")
+    : `<tr><td colspan="4" style="text-align:center;">Aucune commande en cours</td></tr>`;
+}
+
 if (filterStatut) filterStatut.addEventListener("change", renderCommandes);
 
 function resetCommandeForm() {
   commandeForm.reset();
   document.getElementById("commandeId").value = "";
   document.getElementById("commandeDateDepot").value = new Date().toISOString().split("T")[0];
-  newClientFields.style.display = "block";
+  newClientFields.style.display = "grid";
 }
 
 if (newCommandeBtn) {
   newCommandeBtn.addEventListener("click", () => {
     resetCommandeForm();
-    commandeForm.style.display = "block";
+    commandeFormWrap.style.display = "block";
   });
 }
 
 if (cancelCommandeBtn) {
   cancelCommandeBtn.addEventListener("click", () => {
-    commandeForm.style.display = "none";
+    commandeFormWrap.style.display = "none";
   });
 }
 
 if (commandeClientSelect) {
   commandeClientSelect.addEventListener("change", () => {
-    newClientFields.style.display = commandeClientSelect.value ? "none" : "block";
+    newClientFields.style.display = commandeClientSelect.value ? "none" : "grid";
   });
 }
 
@@ -442,8 +540,8 @@ function editCommande(id) {
   document.getElementById("commandeDateRetrait").value = commande.date_retrait_prevue;
   document.getElementById("commandeStatut").value = commande.statut;
 
-  commandeForm.style.display = "block";
-  commandeForm.scrollIntoView({ behavior: "smooth" });
+  commandeFormWrap.style.display = "block";
+  commandeFormWrap.scrollIntoView({ behavior: "smooth" });
 }
 
 if (commandeForm) {
@@ -481,7 +579,7 @@ if (commandeForm) {
       await addCommande(data);
     }
 
-    commandeForm.style.display = "none";
+    commandeFormWrap.style.display = "none";
     await Promise.all([loadClients(), loadCommandes()]);
   });
 }
@@ -501,8 +599,8 @@ async function loadPrestations() {
         <tr>
           <td>${p.nom}</td>
           <td>${p.description || "—"}</td>
-          <td>${p.prix} €</td>
-          <td><button class="btn-link" data-prestation-id="${p.id}">Modifier</button></td>
+          <td>${p.prix}</td>
+          <td class="row-actions"><button data-prestation-id="${p.id}">Modifier</button></td>
         </tr>`
         )
         .join("")
@@ -531,7 +629,7 @@ if (prestationForm) {
     const data = {
       nom: document.getElementById("prestationNom").value.trim(),
       description: document.getElementById("prestationDescription").value.trim(),
-      prix: Number(document.getElementById("prestationPrix").value),
+      prix: document.getElementById("prestationPrix").value.trim(),
     };
 
     const prestationId = document.getElementById("prestationId").value;
@@ -547,4 +645,4 @@ if (prestationForm) {
   });
 }
 
-console.log("🚀 Atelier Couture & Retouche — Script chargé et opérationnel !");
+console.log("🚀 GS Retoucherie — Script chargé et opérationnel !");

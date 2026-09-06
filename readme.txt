@@ -1,6 +1,6 @@
-# ✂️ Atelier Couture & Retouche
+# ✂️ GS Retoucherie
 
-Site vitrine + suivi de commandes de retouche pour l'**Atelier Couture & Retouche** basé à **Évry-Courcouronnes (91000)**.
+Site vitrine + suivi de commandes de retouche pour **GS Retoucherie** (vêtements &amp; cuirs), basé au 26 Cours Blaise Pascal, **Évry-Courcouronnes (91000)**.
 
 Développé en **HTML / CSS / JavaScript natif** avec **Vite**, et hébergé sur **GitHub Pages**, ce projet permet aux clients de contacter l'atelier, et au couturier de suivre ses commandes (dépôt, statut, date de retrait) via un panneau d'administration dédié.
 

@@ -1,239 +1,211 @@
 <!DOCTYPE html>
 <html lang="fr">
 <head>
-  <meta charset="UTF-8">
-  <title>Admin – Atelier Couture & Retouche</title>
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <link rel="stylesheet" href="../src/style.css">
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>GS Retoucherie — Espace admin</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=Archivo:wght@400;500;600;700&family=IBM+Plex+Mono:wght@500;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../src/style.css">
 </head>
 <body>
 
-<section class="section">
-  <div class="section-inner" style="max-width:1000px;">
-
-    <h1 class="section-title">Panneau Administrateur</h1>
-    <p class="section-subtitle">Gestion des commandes de retouche</p>
-
-    <!-- Authentification -->
-    <div id="auth-container" class="rdv-form" style="margin-top:2rem;">
-      <h3 style="margin-bottom:1rem;">Connexion admin</h3>
-
-      <div class="form-group">
-        <label>Email</label>
-        <input type="email" id="adminEmail" placeholder="admin@atelier.fr">
-      </div>
-
-      <div class="form-group">
-        <label>Mot de passe</label>
-        <input type="password" id="adminPassword" placeholder="********">
-      </div>
-
-      <button id="loginBtn" class="btn-submit">Se connecter</button>
-      <p id="authError" class="rdv-note" style="color:#ff8a8a; display:none;"></p>
-    </div>
-
-    <!-- Panel admin -->
-    <div id="admin-panel" style="display:none; margin-top:2rem;">
-
-      <button id="logoutBtn" class="btn-primary" style="margin-bottom:1.6rem;">Déconnexion</button>
-
-      <div class="tabs" style="max-width:600px;">
-        <button class="tab-button active" data-tab="commandes">Commandes</button>
-        <button class="tab-button" data-tab="clients">Clients</button>
-        <button class="tab-button" data-tab="prestations">Prestations</button>
-      </div>
-
-      <!-- ===================== ONGLET COMMANDES ===================== -->
-      <div id="tab-commandes" class="admin-tab">
-
-        <h2 class="section-subtitle">Commandes en cours</h2>
-
-        <div class="filters-bar">
-          <select id="filterStatut">
-            <option value="">Tous les statuts</option>
-            <option value="en_cours">En cours</option>
-            <option value="prete">Prête</option>
-            <option value="recuperee">Récupérée</option>
-          </select>
-          <button id="newCommandeBtn" class="btn-submit" style="width:auto;">+ Nouvelle commande</button>
-        </div>
-
-        <!-- Formulaire ajout/modification commande -->
-        <form id="commandeForm" class="rdv-form" style="display:none; margin:1.5rem 0;">
-          <input type="hidden" id="commandeId">
-
-          <div class="form-group">
-            <label>Client existant</label>
-            <select id="commandeClientSelect">
-              <option value="">— Nouveau client —</option>
-            </select>
-          </div>
-
-          <div id="newClientFields">
-            <div class="form-group">
-              <label>Nom du client *</label>
-              <input type="text" id="commandeClientNom" placeholder="Ex : Samira Diallo">
-            </div>
-            <div class="form-group">
-              <label>Téléphone *</label>
-              <input type="tel" id="commandeClientTel" placeholder="06 xx xx xx xx">
-            </div>
-            <div class="form-group">
-              <label>Email (optionnel)</label>
-              <input type="email" id="commandeClientEmail">
-            </div>
-          </div>
-
-          <div class="form-group">
-            <label>Description de la prestation *</label>
-            <input type="text" id="commandeDescription" placeholder="Ex : Ourlet pantalon x2">
-          </div>
-
-          <div class="form-group">
-            <label>Prix (€) *</label>
-            <input type="number" id="commandePrix" min="0" step="0.5">
-          </div>
-
-          <div class="form-group">
-            <label>Date de dépôt *</label>
-            <input type="date" id="commandeDateDepot">
-          </div>
-
-          <div class="form-group">
-            <label>Date de retrait prévue *</label>
-            <input type="date" id="commandeDateRetrait">
-          </div>
-
-          <div class="form-group">
-            <label>Statut</label>
-            <select id="commandeStatut">
-              <option value="en_cours">En cours</option>
-              <option value="prete">Prête</option>
-              <option value="recuperee">Récupérée</option>
-            </select>
-          </div>
-
-          <button type="submit" class="btn-submit">Enregistrer</button>
-          <button type="button" id="cancelCommandeBtn" class="btn-submit" style="background:transparent; border:1px solid var(--or); color:var(--or-light); margin-top:.6rem;">Annuler</button>
-        </form>
-
-        <table class="admin-table">
-          <thead>
-            <tr>
-              <th>Client</th>
-              <th>Description</th>
-              <th>Prix</th>
-              <th>Dépôt</th>
-              <th>Retrait prévu</th>
-              <th>Statut</th>
-              <th>Actions</th>
-            </tr>
-          </thead>
-          <tbody id="commandesTableBody">
-            <!-- JS injecte ici -->
-          </tbody>
-        </table>
-      </div>
-
-      <!-- ===================== ONGLET CLIENTS ===================== -->
-      <div id="tab-clients" class="admin-tab" style="display:none;">
-
-        <h2 class="section-subtitle">Clients</h2>
-
-        <table class="admin-table">
-          <thead>
-            <tr>
-              <th>Nom</th>
-              <th>Téléphone</th>
-              <th>Email</th>
-              <th>Actions</th>
-            </tr>
-          </thead>
-          <tbody id="clientsTableBody">
-            <!-- JS injecte ici -->
-          </tbody>
-        </table>
-
-        <!-- Fiche client -->
-        <div id="clientDetail" class="client-detail" style="display:none;">
-          <h3 id="clientDetailName" class="section-subtitle"></h3>
-          <p id="clientDetailInfo" class="rdv-note"></p>
-
-          <h4 style="margin:1.2rem 0 .5rem;">Historique des commandes</h4>
-          <table class="admin-table">
-            <thead>
-              <tr>
-                <th>Description</th>
-                <th>Prix</th>
-                <th>Retrait prévu</th>
-                <th>Statut</th>
-              </tr>
-            </thead>
-            <tbody id="clientCommandesBody"></tbody>
-          </table>
-
-          <h4 style="margin:1.2rem 0 .5rem;">Messagerie</h4>
-          <div id="messagesThread" class="msg-thread"></div>
-
-          <form id="replyForm" class="rdv-form" style="margin-top:1rem;">
-            <div class="form-group">
-              <label>Répondre au client</label>
-              <textarea id="replyContenu" rows="3" placeholder="Votre message..."></textarea>
-            </div>
-            <button type="submit" class="btn-submit">Envoyer</button>
-          </form>
-
-          <button id="closeClientDetail" class="btn-submit" style="background:transparent; border:1px solid var(--or); color:var(--or-light); margin-top:1rem;">Fermer la fiche client</button>
-        </div>
-      </div>
-
-      <!-- ===================== ONGLET PRESTATIONS ===================== -->
-      <div id="tab-prestations" class="admin-tab" style="display:none;">
-
-        <h2 class="section-subtitle">Prestations affichées sur le site</h2>
-
-        <form id="prestationForm" class="rdv-form" style="margin-bottom:1.5rem;">
-          <input type="hidden" id="prestationId">
-          <div class="form-group">
-            <label>Nom *</label>
-            <input type="text" id="prestationNom" placeholder="Ex : Ourlet pantalon">
-          </div>
-          <div class="form-group">
-            <label>Description</label>
-            <input type="text" id="prestationDescription" placeholder="Ex : Ourlet simple, toutes matières">
-          </div>
-          <div class="form-group">
-            <label>Prix (€) *</label>
-            <input type="number" id="prestationPrix" min="0" step="0.5">
-          </div>
-          <button type="submit" class="btn-submit">Enregistrer la prestation</button>
-        </form>
-
-        <table class="admin-table">
-          <thead>
-            <tr>
-              <th>Nom</th>
-              <th>Description</th>
-              <th>Prix</th>
-              <th>Actions</th>
-            </tr>
-          </thead>
-          <tbody id="prestationsTableBody">
-            <!-- JS injecte ici -->
-          </tbody>
-        </table>
-      </div>
-
-    </div>
-
+<!-- ===================== CONNEXION ===================== -->
+<div id="auth-container" class="admin-login">
+  <div class="ticket">
+    <span class="tag-eyebrow">Espace admin</span>
+    <h2>Connexion</h2>
+    <p class="lead-sm">GS Retoucherie — accès réservé au gérant.</p>
+    <form id="loginForm" class="form-grid" onsubmit="return false;">
+      <div class="full"><label for="adminEmail">Email</label><input id="adminEmail" type="email" placeholder="admin@gs-retoucherie.fr"></div>
+      <div class="full"><label for="adminPassword">Mot de passe</label><input id="adminPassword" type="password" placeholder="********"></div>
+    </form>
+    <button id="loginBtn" class="btn" type="button" style="width:100%; margin-top:26px; padding:14px; font-size:1rem;">Se connecter</button>
+    <p id="authError" class="field-error"></p>
   </div>
-</section>
+</div>
 
-<footer class="site-footer">
-  © <span id="year"></span> Atelier Couture & Retouche – Évry-Courcouronnes.
-</footer>
+<!-- ===================== ESPACE DE GESTION ===================== -->
+<div id="admin-panel" class="admin-app" style="display:none;">
+  <div class="admin-scrim" id="scrim"></div>
+
+  <aside class="sidebar" id="sidebar">
+    <div class="brand">
+      <svg width="26" height="26" viewBox="0 0 34 34" fill="none">
+        <rect x="4" y="15" width="26" height="6" rx="1" fill="#B4502E"/>
+        <line x1="8" y1="15" x2="8" y2="21" stroke="#2B3438" stroke-width="1"/>
+        <line x1="14" y1="15" x2="14" y2="21" stroke="#2B3438" stroke-width="1"/>
+        <line x1="20" y1="15" x2="20" y2="21" stroke="#2B3438" stroke-width="1"/>
+        <line x1="26" y1="15" x2="26" y2="21" stroke="#2B3438" stroke-width="1"/>
+      </svg>
+      <div class="brand-name">GS Retoucherie<small>Espace de gestion</small></div>
+    </div>
+    <nav class="side-nav">
+      <button class="active" data-view="dashboard"><svg viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.5"><rect x="3" y="3" width="6" height="6" rx="1"/><rect x="11" y="3" width="6" height="6" rx="1"/><rect x="3" y="11" width="6" height="6" rx="1"/><rect x="11" y="11" width="6" height="6" rx="1"/></svg>Tableau de bord</button>
+      <button data-view="commandes"><svg viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.5"><rect x="3" y="4" width="14" height="13" rx="1"/><line x1="3" y1="8" x2="17" y2="8"/><line x1="7" y1="2" x2="7" y2="5"/><line x1="13" y1="2" x2="13" y2="5"/></svg>Commandes</button>
+      <button data-view="prestations"><svg viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M3 10l7-7 7 7-7 7-7-7z"/><circle cx="10" cy="10" r="1.4" fill="currentColor" stroke="none"/></svg>Prestations</button>
+      <button data-view="clients"><svg viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="10" cy="7" r="3"/><path d="M4 17c0-3.3 2.7-5.5 6-5.5s6 2.2 6 5.5"/></svg>Clients</button>
+      <button data-view="messages"><svg viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M3 5h14v9H7l-4 3V5z"/></svg>Messages</button>
+    </nav>
+    <div class="sidebar-foot">
+      Connecté en tant que<br><strong id="adminUserLabel" style="color:#D9D4C8;">Gérant</strong>
+      <button id="logoutBtn" type="button">Déconnexion</button>
+    </div>
+  </aside>
+
+  <div class="admin-main">
+    <div class="admin-topbar">
+      <div style="display:flex; align-items:center; gap:14px; min-width:0;">
+        <button class="admin-menu-toggle" id="menuToggle" aria-label="Ouvrir le menu">
+          <svg viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.6"><line x1="3" y1="5" x2="17" y2="5"/><line x1="3" y1="10" x2="17" y2="10"/><line x1="3" y1="15" x2="17" y2="15"/></svg>
+        </button>
+        <h1 id="topbarTitle">Tableau de bord</h1>
+      </div>
+      <div class="avatar">GS</div>
+    </div>
+
+    <div class="admin-content">
+
+      <!-- ===================== DASHBOARD ===================== -->
+      <div class="admin-view active" id="view-dashboard">
+        <div class="stats">
+          <div class="stat-card"><div class="label">Commandes en cours</div><div class="value mono" id="statEnCours">–</div><div class="sub">en atelier actuellement</div></div>
+          <div class="stat-card"><div class="label">Prêtes à retirer</div><div class="value mono" id="statPretes">–</div><div class="sub">en attente du client</div></div>
+          <div class="stat-card"><div class="label">Récupérées ce mois</div><div class="value mono" id="statRecupereesMois">–</div><div class="sub">commandes clôturées</div></div>
+          <div class="stat-card"><div class="label">CA du mois</div><div class="value mono" id="statCaMois">–</div><div class="sub">commandes déposées ce mois</div></div>
+        </div>
+        <div class="panel">
+          <div class="panel-head"><h2>Prochains retraits</h2></div>
+          <table class="data">
+            <thead><tr><th>Client</th><th>Description</th><th>Retrait prévu</th><th>Statut</th></tr></thead>
+            <tbody id="dashboardTableBody"></tbody>
+          </table>
+        </div>
+      </div>
+
+      <!-- ===================== COMMANDES ===================== -->
+      <div class="admin-view" id="view-commandes">
+        <div class="panel">
+          <div class="panel-head">
+            <h2>Commandes</h2>
+            <div class="filters-bar">
+              <select id="filterStatut">
+                <option value="">Tous les statuts</option>
+                <option value="en_cours">En cours</option>
+                <option value="prete">Prête</option>
+                <option value="recuperee">Récupérée</option>
+              </select>
+              <button id="newCommandeBtn" class="btn" type="button">+ Nouvelle commande</button>
+            </div>
+          </div>
+
+          <div class="panel-body" id="commandeFormWrap" style="display:none; border-bottom:1px solid var(--a-line);">
+            <form id="commandeForm" class="form-grid">
+              <input type="hidden" id="commandeId">
+
+              <div class="full">
+                <label for="commandeClientSelect">Client existant</label>
+                <select id="commandeClientSelect"><option value="">— Nouveau client —</option></select>
+              </div>
+
+              <div id="newClientFields" class="full" style="display:grid; grid-template-columns:1fr 1fr 1fr; gap:18px;">
+                <div><label for="commandeClientNom">Nom du client *</label><input type="text" id="commandeClientNom" placeholder="Ex : Samira Diallo"></div>
+                <div><label for="commandeClientTel">Téléphone *</label><input type="tel" id="commandeClientTel" placeholder="06 xx xx xx xx"></div>
+                <div><label for="commandeClientEmail">Email (optionnel)</label><input type="email" id="commandeClientEmail"></div>
+              </div>
+
+              <div class="full"><label for="commandeDescription">Description de la prestation *</label><input type="text" id="commandeDescription" placeholder="Ex : Ourlet pantalon x2"></div>
+              <div><label for="commandePrix">Prix (€) *</label><input type="number" id="commandePrix" min="0" step="0.5"></div>
+              <div><label for="commandeStatut">Statut</label>
+                <select id="commandeStatut">
+                  <option value="en_cours">En cours</option>
+                  <option value="prete">Prête</option>
+                  <option value="recuperee">Récupérée</option>
+                </select>
+              </div>
+              <div><label for="commandeDateDepot">Date de dépôt *</label><input type="date" id="commandeDateDepot"></div>
+              <div><label for="commandeDateRetrait">Date de retrait prévue *</label><input type="date" id="commandeDateRetrait"></div>
+
+              <div class="ticket-form-actions">
+                <button type="submit" class="btn">Enregistrer</button>
+                <button type="button" id="cancelCommandeBtn" class="btn outline">Annuler</button>
+              </div>
+            </form>
+          </div>
+
+          <table class="data">
+            <thead>
+              <tr><th>Client</th><th>Description</th><th>Prix</th><th>Dépôt</th><th>Retrait prévu</th><th>Statut</th><th></th></tr>
+            </thead>
+            <tbody id="commandesTableBody"></tbody>
+          </table>
+        </div>
+      </div>
+
+      <!-- ===================== PRESTATIONS ===================== -->
+      <div class="admin-view" id="view-prestations">
+        <div class="panel">
+          <div class="panel-head"><h2>Prestations affichées sur le site</h2></div>
+          <div class="panel-body" style="border-bottom:1px solid var(--a-line);">
+            <form id="prestationForm" class="form-grid">
+              <input type="hidden" id="prestationId">
+              <div><label for="prestationNom">Nom *</label><input type="text" id="prestationNom" placeholder="Ex : Ourlet pantalon"></div>
+              <div><label for="prestationPrix">Prix (ex : dès 10 €, sur devis) *</label><input type="text" id="prestationPrix" placeholder="dès 10 €"></div>
+              <div class="full"><label for="prestationDescription">Description</label><input type="text" id="prestationDescription" placeholder="Ex : Pantalons, robes, manteaux ajustés à la bonne taille."></div>
+              <div class="ticket-form-actions"><button type="submit" class="btn">Enregistrer la prestation</button></div>
+            </form>
+          </div>
+          <table class="data">
+            <thead><tr><th>Nom</th><th>Description</th><th>Prix</th><th></th></tr></thead>
+            <tbody id="prestationsTableBody"></tbody>
+          </table>
+        </div>
+      </div>
+
+      <!-- ===================== CLIENTS ===================== -->
+      <div class="admin-view" id="view-clients">
+        <div class="panel">
+          <div class="panel-head"><h2>Clients</h2></div>
+          <table class="data">
+            <thead><tr><th>Nom</th><th>Téléphone</th><th>Email</th><th></th></tr></thead>
+            <tbody id="clientsTableBody"></tbody>
+          </table>
+        </div>
+      </div>
+
+      <!-- ===================== MESSAGES ===================== -->
+      <div class="admin-view" id="view-messages">
+        <div class="panel">
+          <div class="msg-layout">
+            <div class="msg-list" id="messagesClientList"></div>
+            <div class="msg-detail">
+              <div class="msg-detail-empty" id="messagesEmpty">Sélectionnez un client pour voir ses messages.</div>
+              <div id="messagesDetail" class="msg-detail-inner" style="display:none;">
+                <div class="thread-head">
+                  <div id="messagesClientName"></div>
+                  <div class="mono" style="font-size:0.76rem; color:var(--muted); font-weight:400;" id="messagesClientInfo"></div>
+                </div>
+                <div class="thread-history">
+                  <table class="data">
+                    <thead><tr><th>Commande</th><th>Prix</th><th>Retrait</th><th>Statut</th></tr></thead>
+                    <tbody id="messagesHistoryBody"></tbody>
+                  </table>
+                </div>
+                <div class="thread-body" id="messagesThread"></div>
+                <form class="thread-foot" id="replyForm">
+                  <input type="text" id="replyContenu" placeholder="Écrire un message…">
+                  <button class="btn" type="submit">Envoyer</button>
+                </form>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</div>
 
 <script type="module" src="../src/script.js"></script>
-
 </body>
 </html>

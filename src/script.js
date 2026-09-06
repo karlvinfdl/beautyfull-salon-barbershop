@@ -153,7 +153,7 @@ if (contactForm) {
       });
 
       const waUrl =
-        "https://wa.me/33696114806?text=" +
+        "https://wa.me/596696114806?text=" +
         encodeURIComponent(`Bonjour, je vous contacte via le site :\nNom: ${nom}\nMessage: ${message}`);
 
       if (waWindow) {

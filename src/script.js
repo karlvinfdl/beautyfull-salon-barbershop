@@ -147,7 +147,7 @@ if (contactForm) {
       });
 
       window.open(
-        "https://wa.me/3361453210?text=" +
+        "https://wa.me/33696114806?text=" +
           encodeURIComponent(`Bonjour, je vous contacte via le site :\nNom: ${nom}\nMessage: ${message}`),
         "_blank"
       );

@@ -183,6 +183,7 @@ input:focus, select:focus, textarea:focus{ outline:2px solid var(--rust); outlin
 
 footer.site-footer{ padding:34px 0 40px; font-size:0.84rem; color:var(--steel-deep); background:var(--paper); }
 .footer-grid{ display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:14px; max-width:1140px; margin:0 auto; padding:0 28px; }
+.footer-grid a{ text-decoration:underline; text-underline-offset:2px; }
 
 @media (max-width: 860px){
   .hero-grid, .band-grid, .form-grid, .swatch-grid{ grid-template-columns:1fr; }

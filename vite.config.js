@@ -10,6 +10,8 @@ export default defineConfig({
         main: resolve(__dirname, 'index.html'),
         contact: resolve(__dirname, 'pages/contact.html'),
         admin: resolve(__dirname, 'pages/admin.html'),
+        mentionsLegales: resolve(__dirname, 'pages/mentions-legales.html'),
+        confidentialite: resolve(__dirname, 'pages/confidentialite.html'),
       }
     }
   }

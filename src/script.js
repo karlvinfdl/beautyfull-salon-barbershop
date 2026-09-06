@@ -461,7 +461,10 @@ function renderCommandes() {
           <td>${c.date_depot}</td>
           <td>${c.date_retrait_prevue}</td>
           <td>${statutPill(c.statut)}</td>
-          <td class="row-actions"><button data-edit-id="${c.id}">Modifier</button></td>
+          <td class="row-actions">
+            <button data-edit-id="${c.id}">Modifier</button>
+            <button data-notify-id="${c.id}">Notifier</button>
+          </td>
         </tr>`
         )
         .join("")
@@ -470,6 +473,47 @@ function renderCommandes() {
   commandesTableBody.querySelectorAll("button[data-edit-id]").forEach((btn) => {
     btn.addEventListener("click", () => editCommande(btn.dataset.editId));
   });
+
+  commandesTableBody.querySelectorAll("button[data-notify-id]").forEach((btn) => {
+    btn.addEventListener("click", () => notifyClient(btn.dataset.notifyId));
+  });
+}
+
+const STATUT_MESSAGES = {
+  en_cours: (client, c) =>
+    `Bonjour ${client.nom}, votre commande (${c.description}) est bien prise en charge chez GS Retoucherie. Retrait prévu le ${c.date_retrait_prevue}.`,
+  prete: (client, c) =>
+    `Bonjour ${client.nom}, votre commande (${c.description}) est prête ! Vous pouvez venir la récupérer à l'atelier, 26 Cours Blaise Pascal, Évry-Courcouronnes.`,
+  recuperee: (client, c) =>
+    `Bonjour ${client.nom}, merci pour votre confiance chez GS Retoucherie !`,
+};
+
+// Convertit un numéro local (ex: 06 12 34 56 78) en format international pour wa.me.
+// Hypothèse : clients en France métropolitaine (+33) — à ajuster si besoin.
+function toWhatsAppNumber(telephone) {
+  const digits = (telephone || "").replace(/\D/g, "");
+  return digits.startsWith("0") ? "33" + digits.slice(1) : digits;
+}
+
+async function notifyClient(commandeId) {
+  const commande = commandesCache.find((c) => c.id === commandeId);
+  if (!commande) return;
+
+  const client = clientsCache.find((c) => c.id === commande.client_id);
+  if (!client) return alert("Client introuvable.");
+
+  const buildMessage = STATUT_MESSAGES[commande.statut];
+  const texte = buildMessage
+    ? buildMessage(client, commande)
+    : `Bonjour ${client.nom}, une mise à jour concernant votre commande (${commande.description}).`;
+
+  window.open(`https://wa.me/${toWhatsAppNumber(client.telephone)}?text=${encodeURIComponent(texte)}`, "_blank");
+
+  try {
+    await addMessage({ client_id: client.id, contenu: texte, sens: "couturier_vers_client", lu: true });
+  } catch (error) {
+    console.error("Erreur lors de l'enregistrement de la notification :", error);
+  }
 }
 
 function renderDashboard() {
